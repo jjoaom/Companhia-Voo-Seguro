@@ -32,16 +32,22 @@ class Tripulacao{
 class Voo{
     private:
     int id;
-    
+
     
 };
 
 class Assento{
-
+    private:
+    int id;
+    int idVoo;
+    bool status;
 };
 
 class Reserva{
-
+    private:
+    int idVoo;
+    int numAssento;
+    int idPassageiro;
 };
 
 void menu(){
