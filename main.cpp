@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -14,6 +15,7 @@ class Passageiro{
     bool fidelidade;
     int pontosFidelidade;
     public:
+    
     Passageiro(int cod, string nm, string ender, string tel, bool fid = false, int pontos = 0) : id(cod),nome(nm),endereco(end),telefone(tel),fidelidade(fid), pontosFidelidade(pontos) {}
 
     int getId() const { return id; }
