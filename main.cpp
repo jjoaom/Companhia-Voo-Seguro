@@ -30,7 +30,7 @@ class Passageiro{
     bool ehFiel() const { return fidelidade; }
 
     void visualizar() const {
-        std::cout << "Código: " << id << "\n";
+        std::cout << "ID: " << id << "\n";
         std::cout << "Nome: " << nome << "\n";
         std::cout << "Endereço: " << endereco << "\n";
         std::cout << "Telefone: " << telefone << "\n";
