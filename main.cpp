@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -14,30 +15,67 @@ class Passageiro{
     string telefone;
     bool fidelidade;
     int pontosFidelidade;
+
+    static int contadorCodigo;
     public:
     
-    Passageiro(int cod, string nm, string ender, string tel, bool fid = false, int pontos = 0) : id(cod),nome(nm),endereco(end),telefone(tel),fidelidade(fid), pontosFidelidade(pontos) {}
+    Passageiro() : id(contadorCodigo++), fidelidade(false), pontosFidelidade(0) {}
 
+    Passageiro(const string& n, const string& e, const string& t, bool f, int p)
+        : nome(n), endereco(e), telefone(t), fidelidade(f), pontosFidelidade(p) {
+        id = contadorCodigo++;  }
+    
     int getId() const { return id; }
     string getNome() const { return nome; }
     bool ehFiel() const { return fidelidade; }
 
+    void visualizar() const {
+        std::cout << "Código: " << id << "\n";
+        std::cout << "Nome: " << nome << "\n";
+        std::cout << "Endereço: " << endereco << "\n";
+        std::cout << "Telefone: " << telefone << "\n";
+        std::cout << "Fidelidade: " << (fidelidade ? "Sim" : "Não") << "\n";
+        std::cout << "Pontos de Fidelidade: " << pontosFidelidade << "\n";
+    }
+    void cadastrar() {
+        std::cout << "Informe o nome: ";
+        std::getline(std::cin, nome);
+        std::cout << "Informe o endereço: ";
+        std::getline(std::cin, endereco);
+        std::cout << "Informe o telefone: ";
+        std::getline(std::cin, telefone);
+        std::cout << "Fidelidade (1 - Sim, 0 - Não): ";
+        std::cin >> fidelidade;
+        pontosFidelidade = 0;  
+        std::cin.ignore(); 
+    }
 };
 /*TRIPULAÇÃO: código, nome, telefone, cargo (piloto, copiloto, comissário).*/
 class Tripulacao{
     public:
-        enum class Cargo{
-            Piloto,
-            Copiloto,
-            Comissario
+        enum class Cargo{ //1=piloto, 2==copiloto, 3 == comissario
+            Piloto = 1,
+            Copiloto = 2,
+            Comissario = 3
         };
+
     private:
+
     int id;
+    static int contadorCodigo;
+    
     string nome;
     string telefone;
     Cargo cargo;
+
     public:
-    Tripulacao(int cod, string nm, string tel, Cargo cg) : id(cod), nome(nm), telefone(tel), cargo(cg) {} 
+
+    Tripulacao() : id(contadorCodigo++) {}
+
+    Tripulacao(const string& n, const string& t, Cargo c)
+        : nome(n), telefone(t), cargo(c){
+        id = contadorCodigo++;  }
+    
     int getId() const {return id;}
     Cargo getCargo() const {return cargo;}
 
@@ -47,6 +85,8 @@ código do copiloto, código do comissário, status (ativo/inativo), tarifa.*/
 class Voo{
     private:
     int id;
+    static int contadorCodigo;
+
     string data;
     string hora;
     string origem;
@@ -59,17 +99,26 @@ class Voo{
     double tarifa;
     
     public:
+    Voo() : id(contadorCodigo++), status(false) {}
+
+    Voo(const string& d, const string& h, const string& o, const string& dt, 
+    int aviao, int piloto, int copiloto, int comissario, bool s, double preco) 
+    : id(contadorCodigo++), data(d), hora(h), origem(o), destino(dt),
+      idAviao(aviao), idPiloto(piloto), idCopiloto(copiloto), 
+      idComissario(comissario), status(s), tarifa(preco) {}
+
 };
 
 /*ASSENTO: número do assento, código do voo, status (ocupado/livre).*/
 class Assento{
     private:
-    int id;
+    int numAssento;
     int idVoo;
     bool status;
     public: 
-    Assento(int cod, int voo, bool stats = false) : id(cod), idVoo(voo), status(stats) {}
-    int getId() const { return id; }
+    Assento() : numAssento(0), idVoo(0) , status(false) {}
+    Assento(int assento, int voo, bool s) : numAssento(assento), idVoo(voo), status(s) {}
+    int getAssento() const { return numAssento; }
     int getIdVoo() const { return idVoo; }
     bool isOcupado() const { return status;}
     void reservar() { status = true; }
@@ -82,7 +131,9 @@ class Reserva{
     int numAssento;
     int idPassageiro;
     public:
-    Reserva(int cod, int assento, int passageiro) : idVoo(cod), numAssento(assento), idPassageiro(passageiro) {}
+    Reserva() : idVoo(0), numAssento(0), idPassageiro(0) {}
+    Reserva(int cod, int assento, int passageiro) 
+        : idVoo(cod), numAssento(assento), idPassageiro(passageiro) {}
     int getIdVoo() const { return idVoo; }
     int getNumAssento() const { return numAssento; }
     int getIdPassageiro() const { return idPassageiro; }
@@ -117,12 +168,56 @@ class Reserva{
     o Cada voo concede 10 pontos de fidelidade ao passageiro.
     o Um passageiro pode acumular pontos ao longo de múltiplos voos.    
     */
+
+void pesquisa(){
+    int opcao, pesquisa;
+    do
+    {
+        cout << "Pesquisa" << endl;
+        cout << "Escolha uma opção:" << endl;
+        cout << "1-Pesquisar Passageiro" << endl;
+        cout << "2-Pesquisar Tripulação" << endl;
+        cout << "3-Sair" << endl;
+        cin >> opcao;
+        switch (opcao)
+        {
+        case 1:
+            cout << "Pesquisa Passageiro" << endl;
+            cout << "1-Pesquisar por ID" << endl;
+            cout << "2-Pesquisar por nome" << endl;
+            cout << "Escolha uma opção:" << endl;
+            cin >> pesquisa;
+            if (pesquisa == 1)
+            {
+                
+            }
+            
+            break;
+        case 2:
+            cout << "Pesquisa Passageiro" << endl;
+            cout << "1-Pesquisar por ID" << endl;
+            cout << "2-Pesquisar por nome" << endl;
+            cout << "Escolha uma opção:" << endl;
+            cin >> pesquisa;
+            break;
+        case 3:
+            cout << "Saindo..." << endl;
+            break;
+        default:
+            cout << "Opção inválida!" << endl;
+            break;
+        }
+    } while (opcao != 3);
+    
+}
+
+
 void menu(){
     int opcao;
     do
     {
         cout << "MENU - Companhia Voo Seguro" << endl;
-        cout << "1-Cadastrar Passaeiro" << endl;
+        cout << "1-Cadastrar Passageiro" << endl;
         cout << "2-Cadastrar Tripulação" << endl;
         cout << "3-Cadastrar Voo" << endl;
         cout << "4-Cadastrar Assento" << endl;
@@ -155,7 +250,7 @@ void menu(){
             /* 6 */
             break;
         case 7:
-            /* 7 */
+            pesquisa();
             break;
         case 8:
             /* 8 */
@@ -170,6 +265,9 @@ void menu(){
         }
     } while (opcao != 9);
 }
+
+int Passageiro::contadorCodigo = 1;
+int Tripulacao::contadorCodigo = 1;
 
 int main(){
     menu();
