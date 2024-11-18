@@ -109,7 +109,7 @@ class Voo{
     Voo(const string& d, const string& h, const string& o, const string& dt, 
     int aviao, int piloto, int copiloto, int comissario, bool s, double preco) 
     : id(contadorCodigo++), data(d), hora(h), origem(o), destino(dt),
-    idAviao(aviao), idPiloto(piloto), idCopiloto(copiloto), 
+    idAviao(aviao), idPiloto(piloto), idCopiloto(copiloto),
     idComissario(comissario), status(s), tarifa(preco) {}
 
 };
@@ -120,17 +120,33 @@ class Assento{
     private:
     int numAssento;
     int idVoo;
-    bool status;
+    bool ocupado;
     public: 
-    Assento() : numAssento(0), idVoo(0) , status(false) {}
-    Assento(int assento, int voo, bool s) : numAssento(assento), idVoo(voo), status(s) {}
+    Assento() : numAssento(0), idVoo(0) , ocupado(false) {}
+    Assento(int assento, int voo, bool s) : numAssento(assento), idVoo(voo), ocupado(s) {}
     int getAssento() const { return numAssento; }
     void setAssento(int assento) { numAssento = assento;}
     int getIdVoo() const { return idVoo; }
     void setIdVoo(int id) { idVoo = id;}
-    bool isOcupado() const { return status;}
-    void reservar() { status = true; }
-    void liberar() { status = false; }
+    bool isOcupado() const { return ocupado;}
+    void ocupar() { 
+        if (!ocupado)
+        {
+            ocupado = true;
+        }else{
+            cout << "O assento " << numAssento << " já está ocupado." << endl; 
+        }
+        
+    }
+    void liberar() { 
+        if (ocupado)
+        {
+            ocupado = false;
+        }else{
+            cout << "O assento " << numAssento << " já está livre." << endl; 
+        }
+        
+    }
 };
 
 /*RESERVA: código do voo, número do assento, código do passageiro.*/
