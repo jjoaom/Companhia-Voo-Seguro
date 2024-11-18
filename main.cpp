@@ -1,7 +1,8 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <vector>
+#include <iostream> //bib padrão
+#include <iomanip> //bib conversão double
+#include <string> //bib string
+#include <fstream> //bib file
+#include <vector> //bib vector
 
 using namespace std;
 
@@ -50,10 +51,12 @@ class Passageiro{
         std::cin.ignore(); 
     }
 };
+int Passageiro::contadorCodigo = 0; // Contador de ID estático
+
 /*TRIPULAÇÃO: código, nome, telefone, cargo (piloto, copiloto, comissário).*/
 class Tripulacao{
     public:
-        enum class Cargo{ //1=piloto, 2==copiloto, 3 == comissario
+        enum class Cargo{ //1=piloto, 2=copiloto, 3=comissario
             Piloto = 1,
             Copiloto = 2,
             Comissario = 3
@@ -80,6 +83,8 @@ class Tripulacao{
     Cargo getCargo() const {return cargo;}
 
 };
+int Tripulacao::contadorCodigo = 0; // Contador de ID estático
+
 /*VOO: código do voo, data, hora, origem, destino, código do avião, código do piloto,
 código do copiloto, código do comissário, status (ativo/inativo), tarifa.*/
 class Voo{
@@ -104,10 +109,11 @@ class Voo{
     Voo(const string& d, const string& h, const string& o, const string& dt, 
     int aviao, int piloto, int copiloto, int comissario, bool s, double preco) 
     : id(contadorCodigo++), data(d), hora(h), origem(o), destino(dt),
-      idAviao(aviao), idPiloto(piloto), idCopiloto(copiloto), 
-      idComissario(comissario), status(s), tarifa(preco) {}
+    idAviao(aviao), idPiloto(piloto), idCopiloto(copiloto), 
+    idComissario(comissario), status(s), tarifa(preco) {}
 
 };
+int Voo::contadorCodigo = 0; // Contador de ID estático
 
 /*ASSENTO: número do assento, código do voo, status (ocupado/livre).*/
 class Assento{
@@ -119,11 +125,14 @@ class Assento{
     Assento() : numAssento(0), idVoo(0) , status(false) {}
     Assento(int assento, int voo, bool s) : numAssento(assento), idVoo(voo), status(s) {}
     int getAssento() const { return numAssento; }
+    void setAssento(int assento) { numAssento = assento;}
     int getIdVoo() const { return idVoo; }
+    void setIdVoo(int id) { idVoo = id;}
     bool isOcupado() const { return status;}
     void reservar() { status = true; }
     void liberar() { status = false; }
 };
+
 /*RESERVA: código do voo, número do assento, código do passageiro.*/
 class Reserva{
     private:
@@ -135,8 +144,11 @@ class Reserva{
     Reserva(int cod, int assento, int passageiro) 
         : idVoo(cod), numAssento(assento), idPassageiro(passageiro) {}
     int getIdVoo() const { return idVoo; }
+    void setIdVoo(int id) { idVoo = id;}
     int getNumAssento() const { return numAssento; }
+    void setAssento(int assento) { numAssento = assento;}
     int getIdPassageiro() const { return idPassageiro; }
+    void setIdPassageiro(int id ) { idPassageiro = id;}
 };
 
 /*Funcionalidades a Implementar:
