@@ -1,10 +1,34 @@
 #include <iostream> //bib padrão
-#include <iomanip> //bib conversão double
+#include <iomanip> //bib imprimir double formatado
+#include <locale> //bib local
 #include <string> //bib string
 #include <fstream> //bib file
 #include <vector> //bib vector
 
 using namespace std;
+
+
+
+//metodos para lidar com o contador de ID estático em arquivo binário
+    void loadContadorId(const string& nomeArquivo, int& contadorId){
+        ifstream arq(nomeArquivo, ios::binary);
+        if (arq)
+        {
+            arq.read(reinterpret_cast<char*>(&contadorId),sizeof(contadorId));
+        } else{
+            contadorId = 1;
+        }    
+    }
+    void saveContadorId(const string& nomeArquivo, int &contadorId){
+        ofstream arq(nomeArquivo,ios::binary);
+        if (arq)
+        {
+            arq.write(reinterpret_cast<const char*>(&contadorId),sizeof(contadorId));
+        }else{
+            cerr << "Erro ao abrir o arquivo para salvar o ID" << endl;
+        }
+        
+    }
 
 /*PASSAGEIRO: código, nome, endereço, telefone, fidelidade (sim/não), pontos
 fidelidade.*/
@@ -17,16 +41,18 @@ class Passageiro{
     bool fidelidade;
     int pontosFidelidade;
 
-    static int contadorCodigo;
+    static int contadorId;
     public:
     
-    Passageiro() : id(contadorCodigo++), fidelidade(false), pontosFidelidade(0) {}
+    Passageiro() : id(contadorId++), fidelidade(false), pontosFidelidade(0) {}
 
     Passageiro(const string& n, const string& e, const string& t, bool f, int p)
         : nome(n), endereco(e), telefone(t), fidelidade(f), pontosFidelidade(p) {
-        id = contadorCodigo++;  }
+        id = contadorId++;  }
     
     int getId() const { return id; }
+    static int getContador() { return contadorId; }
+    static void setContador(int newId) { contadorId = newId; }
     string getNome() const { return nome; }
     bool ehFiel() const { return fidelidade; }
 
@@ -48,11 +74,49 @@ class Passageiro{
         getline(cin, telefone);
         cout << "Fidelidade (1 - Sim, 0 - Não): " << endl;
         cin >> fidelidade;
+        while (fidelidade != 0 && fidelidade != 1)
+        {
+            cout << "Entrada inválida. Informe 1 para Sim ou 0 para Não: ";
+            cin >> fidelidade;
+        }
+        
         pontosFidelidade = 0;  
         cin.ignore(); 
     }
+    //metodos para salvar e ler nos arq binarios
+    void salvar(ofstream& arq) const{
+        arq.write(reinterpret_cast<const char*>(&id),sizeof(id));
+        size_t nomeSize = nome.size();
+        arq.write(reinterpret_cast<const char*>(&nomeSize),sizeof(nomeSize));
+        arq.write(nome.c_str(),nomeSize);
+        size_t enderecoSize = endereco.size();
+        arq.write(reinterpret_cast<const char*>(&enderecoSize),sizeof(enderecoSize));
+        arq.write(endereco.c_str(),enderecoSize);
+        size_t telefoneSize = telefone.size();
+        arq.write(reinterpret_cast<const char*>(&telefoneSize), sizeof(telefoneSize));
+        arq.write(telefone.c_str(), telefoneSize);
+        arq.write(reinterpret_cast<const char*>(&fidelidade), sizeof(fidelidade));
+        arq.write(reinterpret_cast<const char*>(&pontosFidelidade), sizeof(pontosFidelidade));
+    }
+    void ler(ifstream& arq) {
+        arq.read(reinterpret_cast<char*>(&id), sizeof(id));
+        size_t nomeSize;
+        arq.read(reinterpret_cast<char*>(&nomeSize), sizeof(nomeSize));
+        nome.resize(nomeSize);
+        arq.read(&nome[0], nomeSize);
+        size_t enderecoSize;
+        arq.read(reinterpret_cast<char*>(&enderecoSize), sizeof(enderecoSize));
+        endereco.resize(enderecoSize);
+        arq.read(&endereco[0], enderecoSize);
+        size_t telefoneSize;
+        arq.read(reinterpret_cast<char*>(&telefoneSize), sizeof(telefoneSize));
+        telefone.resize(telefoneSize);
+        arq.read(&telefone[0], telefoneSize);
+        arq.read(reinterpret_cast<char*>(&fidelidade), sizeof(fidelidade));
+        arq.read(reinterpret_cast<char*>(&pontosFidelidade), sizeof(pontosFidelidade));
+    }
 };
-int Passageiro::contadorCodigo = 1; // Contador de ID estático
+int Passageiro::contadorId = 1; // Contador de ID estático
 
 /*TRIPULAÇÃO: código, nome, telefone, cargo (piloto, copiloto, comissário).*/
 class Tripulacao{
@@ -66,7 +130,7 @@ class Tripulacao{
     private:
 
     int id;
-    static int contadorCodigo;
+    static int contadorId;
     
     string nome;
     string telefone;
@@ -88,12 +152,15 @@ class Tripulacao{
 
     public:
 
-    Tripulacao() : id(contadorCodigo++) {}
+    Tripulacao() : id(contadorId++) {}
 
     Tripulacao(const string& n, const string& t, Cargo c)
         : nome(n), telefone(t), cargo(c){
-        id = contadorCodigo++;  }
+        id = contadorId++;  }
     
+    static int getContador() { return contadorId; }
+    static void setContador(int newId) { contadorId = newId; }
+
     int getId() const { return id; }
     string getNome() const { return nome; }
     Cargo getCargo() const {return cargo;}
@@ -119,16 +186,38 @@ class Tripulacao{
         cargo = static_cast<Cargo>(cargoEscolhido); //converte o valor digitado para o usuário para o tipo enum
         cin.ignore();
     }
-
+    //metodos para salvar e ler nos arq binarios
+    void salvar(ofstream& arq) const{
+        arq.write(reinterpret_cast<const char*>(&id),sizeof(id));
+        size_t nomeSize = nome.size();
+        arq.write(reinterpret_cast<const char*>(&nomeSize),sizeof(nomeSize));
+        arq.write(nome.c_str(),nomeSize);
+        size_t telefoneSize = telefone.size();
+        arq.write(reinterpret_cast<const char*>(&telefoneSize), sizeof(telefoneSize));
+        arq.write(telefone.c_str(), telefoneSize);
+        arq.write(reinterpret_cast<const char*>(&cargo), sizeof(cargo));
+    }
+    void ler(ifstream& arq) {
+        arq.read(reinterpret_cast<char*>(&id), sizeof(id));
+        size_t nomeSize;
+        arq.read(reinterpret_cast<char*>(&nomeSize), sizeof(nomeSize));
+        nome.resize(nomeSize);
+        arq.read(&nome[0], nomeSize);
+        size_t telefoneSize;
+        arq.read(reinterpret_cast<char*>(&telefoneSize), sizeof(telefoneSize));
+        telefone.resize(telefoneSize);
+        arq.read(&telefone[0], telefoneSize);
+        arq.read(reinterpret_cast<char*>(&cargo), sizeof(cargo));
+    }
 };
-int Tripulacao::contadorCodigo = 1; // Contador de ID estático
+int Tripulacao::contadorId = 1; // Contador de ID estático
 
 /*VOO: código do voo, data, hora, origem, destino, código do avião, código do piloto,
 código do copiloto, código do comissário, status (ativo/inativo), tarifa.*/
 class Voo{
     private:
     int id;
-    static int contadorCodigo;
+    static int contadorId;
 
     string data;
     string hora;
@@ -142,16 +231,19 @@ class Voo{
     double tarifa;
     
     public:
-    Voo() : id(contadorCodigo++), status(false) {}
+    Voo() : id(contadorId++), status(false) {}
 
     Voo(const string& d, const string& h, const string& o, const string& dt, 
     int aviao, int piloto, int copiloto, int comissario, bool s, double preco) 
-    : id(contadorCodigo++), data(d), hora(h), origem(o), destino(dt),
+    : id(contadorId++), data(d), hora(h), origem(o), destino(dt),
     idAviao(aviao), idPiloto(piloto), idCopiloto(copiloto),
     idComissario(comissario), status(s), tarifa(preco) {}
 
+    static int getContador() { return contadorId; }
+    static void setContador(int newId) { contadorId = newId; }
+
 };
-int Voo::contadorCodigo = 1; // Contador de ID estático
+int Voo::contadorId = 1; // Contador de ID estático
 
 /*ASSENTO: número do assento, código do voo, status (ocupado/livre).*/
 class Assento{
@@ -216,6 +308,9 @@ void salvarArqBinario(const vector<T>& vetor, const string& nomeArquivo){
         cerr << "Erro ao abrir arquivo para escrita." << endl;
         return;
     }
+    //metodo para salvar primeiro o contador id
+    int contadorId = T::getContador();
+    arq.write(reinterpret_cast<const char*>(&contadorId), sizeof(contadorId));
     //size_t é um tipo que serve para representar tamanhos e contagens
     size_t tamanho = vetor.size();
     //reinterpret_cast serve para realizar conversões diretas
@@ -224,7 +319,7 @@ void salvarArqBinario(const vector<T>& vetor, const string& nomeArquivo){
     //loop para percorrer o vetor, o tipo auto serve para deduzir automaticamente o tipo do vetor
     for (const auto& item : vetor)
     {
-        arq.write(reinterpret_cast<const char*>(&item),sizeof(item));
+        item.salvar(arq);
     }
     arq.close();
 }
@@ -236,17 +331,23 @@ vector<T> lerArqBinario(const string& nomeArquivo){
 
     if(!arq){
         cerr << "Erro ao abrir o arquivo para leitura." << endl;
-        return;
+        return vetor;
     }
+    //metodo para ler o contadorId do arquivo
+    int contadorId;
+    arq.read(reinterpret_cast<char*>(&contadorId),sizeof(contadorId));
+    T::setContador(contadorId);
 
     size_t tamanho;
     arq.read(reinterpret_cast<char*>(&tamanho),sizeof(tamanho)); //tamanho do vetor
+
     for (size_t i = 0; i < tamanho; ++i)
     {
         T item;
-        arq.read(reinterpret_cast<char*>(&item),sizeof(item));
+        item.ler(arq);
         vetor.push_back(item);
     }
+    arq.close();
     return vetor;
 }
 
@@ -262,6 +363,21 @@ vector<T> lerArqBinario(const string& nomeArquivo){
     o Cada membro da tripulação deve ter um cargo específico.
     o Deve garantir que não haja dois membros da tripulação com o mesmo código.
     o Opcionalmente, pode-se gerar o código automaticamente.*/
+void cadastrarTripulacao(){
+    vector<Tripulacao> tripulantes;
+    Tripulacao novoTripulante;
+    novoTripulante.cadastrar();
+    tripulantes.push_back(novoTripulante);
+    salvarArqBinario(tripulantes, "tripulacao.bin");
+
+    cout << "Tripulantes registrados: " << endl;
+    vector<Tripulacao> tripulantesLoaded = lerArqBinario<Tripulacao>("tripulacao.bin");
+    for (const auto& t : tripulantesLoaded)
+    {
+        t.visualizar();
+    }
+    cout << "---------------------" << endl;
+}
 
 
 /*3. Cadastro de Voo:
@@ -290,6 +406,10 @@ void cadastrarAssentos(){
         Assentos.push_back(novoAssento);
     }
     salvarArqBinario(Assentos, "assentos.bin");
+    vector<Assento> assentosLoaded = lerArqBinario<Assento>("tripulacao.bin");
+    for(const auto& a : assentosLoaded){
+        cout << "Nº de assentos registrados: " << assentosLoaded.size();
+    }
 }
 
 /*5. Reserva:
@@ -435,13 +555,13 @@ void menu(){
             /* 1 */
             break;
         case 2:
-            /* 2 */
+            cadastrarTripulacao();
             break;
         case 3:
             /* 3 */
             break;
         case 4:
-            /* 4 */
+            cadastrarAssentos();
             break;
         case 5:
             /* 5 */
@@ -466,19 +586,9 @@ void menu(){
     } while (opcao != 9);
 }
 
-int Passageiro::contadorCodigo = 1;
-int Tripulacao::contadorCodigo = 1;
-
-
-
 int main(){
+    locale::global(locale("pt_BR.UTF-8"));
     menu();
-    //Vectors das classes a serem manipuladas por arquivo
-    vector<Passageiro> passageiros;
-    vector<Tripulacao> tripulantes;
-    vector<Voo> voos;
-    vector<Assento> assentos;
-    vector<Reserva> reservas;
 
     return 0;
 }
