@@ -27,6 +27,7 @@ class Passageiro{
         id = contadorId++;  }
     
     int getId() const { return id; }
+    void setId(int newId) { id = newId; }
     static int getContador() { return contadorId; }
     static void setContador(int newId) { contadorId = newId; }
     string getNome() const { return nome; }
@@ -138,6 +139,8 @@ class Tripulacao{
     static void setContador(int newId) { contadorId = newId; }
 
     int getId() const { return id; }
+    void setId(int newId) { id = newId; }
+
     string getNome() const { return nome; }
     Cargo getCargo() const {return cargo;}
 
@@ -214,6 +217,9 @@ class Voo{
     : id(contadorId++), data(d), hora(h), origem(o), destino(dt),
     idAviao(aviao), idPiloto(piloto), idCopiloto(copiloto),
     idComissario(comissario), status(s), tarifa(preco) {}
+
+    int getId() const { return id; }
+    void setId(int newId) { id = newId; }
 
     static int getContador() { return contadorId; }
     static void setContador(int newId) { contadorId = newId; }
@@ -478,7 +484,27 @@ vector<T> lerArqBinario(const string& nomeArquivo){
     return vetor;
 }
 
-
+//template para verificar duplicidade de id
+template <typename T>
+void verificarId(const vector<T>& vetor, T& novoItem){
+    bool idDuplicado;
+    do
+    {
+        idDuplicado = false;
+        for(const auto& v : vetor){
+            if (v.getId() == novoItem.getId())
+            {
+                idDuplicado = true;
+                int novoId = T::getContador();
+                novoItem.setId(novoId);
+                T::setContador(novoId + 1);
+                break;
+            }
+            
+        }
+    } while (idDuplicado);
+    
+}
 
 /*Funcionalidades a Implementar:*/
 /*1. Cadastro de Passageiro:
@@ -493,6 +519,9 @@ void cadastrarPassageiro(){
 
     Passageiro novoPassageiro;
     novoPassageiro.cadastrar();
+    
+    verificarId(passageiros, novoPassageiro);
+
     passageiros.push_back(novoPassageiro);
 
     salvarArqBinario(passageiros,"passageiro.bin");
@@ -517,6 +546,9 @@ void cadastrarTripulacao(){
 
     Tripulacao novoTripulante;
     novoTripulante.cadastrar();
+
+    verificarId(tripulantes,novoTripulante);
+
     tripulantes.push_back(novoTripulante);
 
     salvarArqBinario(tripulantes, "tripulacao.bin");
@@ -542,6 +574,9 @@ void cadastrarVoo(){
     vector<Voo> voos;
     Voo novoVoo;
     novoVoo.cadastrar();
+
+    verificarId(voos,novoVoo);
+
     voos.push_back(novoVoo);
     salvarArqBinario(voos,"voo.bin");
 
