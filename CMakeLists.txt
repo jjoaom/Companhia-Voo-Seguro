@@ -1,5 +1,5 @@
 # Defina a versão mínima do CMake
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 
 # Nome do projeto
 project(TP-Voo-Seguro)
@@ -33,10 +33,19 @@ endif()
 # Adiciona o arquivo de código-fonte
 add_executable(TP-Voo-Seguro main.cpp)
 
+# Adiciona o GoogleTest usando FetchContent
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.zip
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
 # Adiciona o GoogleTest
 enable_testing()
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 # Adiciona o subdiretório de testes
 add_subdirectory(test)
