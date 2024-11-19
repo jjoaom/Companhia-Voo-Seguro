@@ -8,25 +8,38 @@ project(TP-Voo-Seguro)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Mensagens de status para saber onde estamos
+message(STATUS "Compilando para o sistema: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "CMake versão: ${CMAKE_VERSION}")
+
+# Defina configurações específicas com base no sistema operacional
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    message(STATUS "Compilando para Windows")
+    # Evita conflitos com macros max/min no Windows
+    add_definitions(-DNOMINMAX)
+    
+    # Aqui você pode adicionar configurações específicas para Windows, como linkar bibliotecas específicas, se necessário
+    # Por exemplo: target_link_libraries(TP-Voo-Seguro ws2_32) para usar Winsock
+
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    message(STATUS "Compilando para macOS")
+    # Configurações específicas para o macOS, se necessário
+
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(STATUS "Compilando para Linux")
+    # Configurações específicas para Linux, se necessário
+endif()
+
 # Adiciona o arquivo de código-fonte
 add_executable(TP-Voo-Seguro main.cpp)
 
-# Configuração para Windows (caso queira usar algum recurso do Windows, como Windows.h)
-if(WIN32)
-    # Específico para o Windows, podemos adicionar flags ou configurações especiais se necessário
-    message(STATUS "Compilando para Windows")
-    # Aqui você pode adicionar configurações específicas do Windows, como suporte a fontes e acentuação
-    # Para o Windows, não há nada a mais a configurar especificamente para o seu código
-elseif(APPLE)
-    message(STATUS "Compilando para macOS")
-elseif(UNIX)
-    message(STATUS "Compilando para Linux ou outro sistema UNIX")
-endif()
+# Caso queira definir o tipo de compilação (Debug, Release)
+set(CMAKE_BUILD_TYPE Release)  # Pode ser ajustado para 'Debug' ou 'RelWithDebInfo' conforme necessário
 
-# Caso queira adicionar flags de compilação para depuração ou release
-# Por exemplo, pode-se adicionar otimizações em modo Release
-set(CMAKE_BUILD_TYPE Release)
+# Caso você tenha dependências externas, pode usar find_package ou configurar bibliotecas
+# Exemplo:
+# find_package(Boost REQUIRED)
+# target_link_libraries(TP-Voo-Seguro Boost::Boost)
 
-# Caso tenha dependências externas, você pode encontrar bibliotecas da seguinte forma
-# Exemplo: find_package(Boost REQUIRED)
-# target_link_libraries(ProjetoSimples Boost::Boost)
+# Mensagem sobre o sistema operacional
+message(STATUS "Sistema operacional: ${CMAKE_SYSTEM_NAME}")
