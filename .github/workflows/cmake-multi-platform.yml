@@ -30,10 +30,10 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt-get install -y libgtest-dev
-        cd /usr/src/gtest
+        cd /usr/src/googletest/googletest
         sudo cmake CMakeLists.txt
         sudo make
-        sudo cp *.a /usr/lib
+        sudo cp googletest/*.a /usr/lib
 
     - name: Install dependencies on macOS
       if: matrix.os == 'macos-latest'
