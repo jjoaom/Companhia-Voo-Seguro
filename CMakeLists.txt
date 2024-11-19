@@ -21,6 +21,17 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Aqui você pode adicionar configurações específicas para Windows, como linkar bibliotecas específicas, se necessário
     # Por exemplo: target_link_libraries(TP-Voo-Seguro ws2_32) para usar Winsock
 
+    # Adiciona o GoogleTest usando FetchContent no Windows
+    include(FetchContent)
+    FetchContent_Declare(
+      googletest
+      URL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.zip
+    )
+    # For Windows: Prevent overriding the parent project's compiler/linker settings
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googletest)
+    include_directories(${googletest_SOURCE_DIR}/googletest/include ${googletest_SOURCE_DIR}/googletest)
+
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Compilando para macOS")
     # Configurações específicas para o macOS, se necessário
@@ -33,19 +44,10 @@ endif()
 # Adiciona o arquivo de código-fonte
 add_executable(TP-Voo-Seguro main.cpp)
 
-# Adiciona o GoogleTest usando FetchContent
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.zip
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
 # Adiciona o GoogleTest
 enable_testing()
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
 
 # Adiciona o subdiretório de testes
 add_subdirectory(test)
