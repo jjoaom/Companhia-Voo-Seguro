@@ -27,6 +27,7 @@ class Passageiro{
         id = contadorId++;  }
     
     int getId() const { return id; }
+    void setId(int newId) { id = newId; }
     static int getContador() { return contadorId; }
     static void setContador(int newId) { contadorId = newId; }
     string getNome() const { return nome; }
@@ -50,16 +51,14 @@ class Passageiro{
         getline(cin, telefone);
         cout << "Fidelidade (1 - Sim, 0 - Não): " << endl;
         cin >> fidelidade;
-        cin.ignore();
         while (fidelidade != 0 && fidelidade != 1)
         {
             cout << "Entrada inválida. Informe 1 para Sim ou 0 para Não: ";
             cin >> fidelidade;
-            cin.ignore();
         }
-        
-        pontosFidelidade = 0;  
         cin.ignore(); 
+        pontosFidelidade = 0;  
+        
     }
     //metodos para salvar e ler nos arq binarios
     void salvar(ofstream& arq) const{
@@ -140,6 +139,8 @@ class Tripulacao{
     static void setContador(int newId) { contadorId = newId; }
 
     int getId() const { return id; }
+    void setId(int newId) { id = newId; }
+
     string getNome() const { return nome; }
     Cargo getCargo() const {return cargo;}
 
@@ -216,6 +217,9 @@ class Voo{
     : id(contadorId++), data(d), hora(h), origem(o), destino(dt),
     idAviao(aviao), idPiloto(piloto), idCopiloto(copiloto),
     idComissario(comissario), status(s), tarifa(preco) {}
+
+    int getId() const { return id; }
+    void setId(int newId) { id = newId; }
 
     static int getContador() { return contadorId; }
     static void setContador(int newId) { contadorId = newId; }
@@ -402,31 +406,6 @@ class Reserva{
 };
 
 
-/* metodos para lidar com o contador de ID estático em arquivo binário
-void loadContadorId(const string &nomeArquivo, int &contadorId)
-{
-    ifstream arq(nomeArquivo, ios::binary | ios::in);
-    if (arq)
-    {
-        arq.read(reinterpret_cast<char *>(&contadorId), sizeof(contadorId));
-    }
-    else
-    {
-        contadorId = 1;
-    }
-}
-void saveContadorId(const string &nomeArquivo, int &contadorId)
-{
-    ofstream arq(nomeArquivo, ios::binary) | ios::out;
-    if (arq)
-    {
-        arq.write(reinterpret_cast<const char *>(&contadorId), sizeof(contadorId));
-    }
-    else
-    {
-        cerr << "Erro ao abrir o arquivo para salvar o ID" << endl;
-    }
-} */
 
 /*Templates são uma característica na linguagem que permite escrever um código genérico que pode ser reutilizado para diferentes tipos.*/
 //templates para manipulação do contadorId estático nos arquivos binários
@@ -505,7 +484,27 @@ vector<T> lerArqBinario(const string& nomeArquivo){
     return vetor;
 }
 
-
+//template para verificar duplicidade de id
+template <typename T>
+void verificarId(const vector<T>& vetor, T& novoItem){
+    bool idDuplicado;
+    do
+    {
+        idDuplicado = false;
+        for(const auto& v : vetor){
+            if (v.getId() == novoItem.getId())
+            {
+                idDuplicado = true;
+                int novoId = T::getContador();
+                novoItem.setId(novoId);
+                T::setContador(novoId + 1);
+                break;
+            }
+            
+        }
+    } while (idDuplicado);
+    
+}
 
 /*Funcionalidades a Implementar:*/
 /*1. Cadastro de Passageiro:
@@ -520,6 +519,9 @@ void cadastrarPassageiro(){
 
     Passageiro novoPassageiro;
     novoPassageiro.cadastrar();
+    
+    verificarId(passageiros, novoPassageiro);
+
     passageiros.push_back(novoPassageiro);
 
     salvarArqBinario(passageiros,"passageiro.bin");
@@ -544,6 +546,9 @@ void cadastrarTripulacao(){
 
     Tripulacao novoTripulante;
     novoTripulante.cadastrar();
+
+    verificarId(tripulantes,novoTripulante);
+
     tripulantes.push_back(novoTripulante);
 
     salvarArqBinario(tripulantes, "tripulacao.bin");
@@ -569,6 +574,9 @@ void cadastrarVoo(){
     vector<Voo> voos;
     Voo novoVoo;
     novoVoo.cadastrar();
+
+    verificarId(voos,novoVoo);
+
     voos.push_back(novoVoo);
     salvarArqBinario(voos,"voo.bin");
 
@@ -600,7 +608,7 @@ void cadastrarAssentos(){
         Assentos.push_back(novoAssento);
     }
     salvarArqBinario(Assentos, "assentos.bin");
-    vector<Assento> assentosLoaded = lerArqBinario<Assento>("tripulacao.bin");
+    vector<Assento> assentosLoaded = lerArqBinario<Assento>("assento.bin");
     for(const auto& a : assentosLoaded){
         cout << "Nº de assentos registrados: " << assentosLoaded.size();
     }
