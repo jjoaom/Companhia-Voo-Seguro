@@ -4,8 +4,6 @@
 #include <fstream> //bib file
 #include <vector> //bib vector
 #include <locale> //bib local
-#define NOMINMAX 
-#include <Windows.h> //bib acentuação local
 #include <limits> //bib limits para limpeza de buffer
 
 using namespace std;
@@ -844,6 +842,8 @@ void menu(){
 void checkOs() {
     #ifdef _WIN32 //check windows 32 ou 64
         try {
+            #define NOMINMAX 
+            #include <Windows.h> //bib acentuação local
             // Configura o console para usar UTF-8 (chcp 65001)
             SetConsoleOutputCP(CP_UTF8);
             SetConsoleCP(CP_UTF8);
