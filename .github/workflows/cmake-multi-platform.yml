@@ -53,7 +53,7 @@ jobs:
         cd googletest
         mkdir build
         cd build
-        cmake ..
+        cmake -DCMAKE_INSTALL_PREFIX:PATH="C:/local" ..
         cmake --build . --config Release
         cmake --install . --config Release
 
