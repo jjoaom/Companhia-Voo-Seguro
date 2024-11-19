@@ -31,7 +31,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Compilando para macOS")
-    # Configurações específicas para o macOS, se necessário
+    # Adiciona o GoogleTest no macOS
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(STATUS "Compilando para Linux")
