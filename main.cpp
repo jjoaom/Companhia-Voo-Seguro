@@ -43,6 +43,7 @@ class Passageiro{
     static void setContador(int newId) { contadorId = newId; }
     string getNome() const { return nome; }
     bool ehFiel() const { return fidelidade; }
+    int getPontosFidelidade() const { return pontosFidelidade; }
 
     void visualizar() const {
         cout << "ID: " << id << endl;
@@ -877,6 +878,7 @@ int Passageiro::contadorId;
 int Tripulacao::contadorId;
 int Voo::contadorId;
 
+#ifndef RUNNING_TESTS
 int main(){
     checkOs();
     verificarArquivos();
@@ -884,3 +886,4 @@ int main(){
 
     return 0;
 }
+#endif
