@@ -50,16 +50,14 @@ class Passageiro{
         getline(cin, telefone);
         cout << "Fidelidade (1 - Sim, 0 - Não): " << endl;
         cin >> fidelidade;
-        cin.ignore();
         while (fidelidade != 0 && fidelidade != 1)
         {
             cout << "Entrada inválida. Informe 1 para Sim ou 0 para Não: ";
             cin >> fidelidade;
-            cin.ignore();
         }
-        
-        pontosFidelidade = 0;  
         cin.ignore(); 
+        pontosFidelidade = 0;  
+        
     }
     //metodos para salvar e ler nos arq binarios
     void salvar(ofstream& arq) const{
@@ -575,7 +573,7 @@ void cadastrarAssentos(){
         Assentos.push_back(novoAssento);
     }
     salvarArqBinario(Assentos, "assentos.bin");
-    vector<Assento> assentosLoaded = lerArqBinario<Assento>("tripulacao.bin");
+    vector<Assento> assentosLoaded = lerArqBinario<Assento>("assento.bin");
     for(const auto& a : assentosLoaded){
         cout << "Nº de assentos registrados: " << assentosLoaded.size();
     }
