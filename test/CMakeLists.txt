@@ -7,7 +7,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 add_executable(runTests test_main.cpp)
 
 # Linka o GoogleTest e pthread
-target_link_libraries(runTests ${GTEST_LIBRARIES} pthread)
+target_link_libraries(runTests GTest::gtest GTest::gtest_main pthread)
 
 # Adiciona os testes
 add_test(NAME TestePassageiro COMMAND runTests)
