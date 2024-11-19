@@ -1,3 +1,10 @@
+#ifdef _WIN32
+    #ifndef NOMINMAX
+        #define NOMINMAX
+    #endif
+    #include <Windows.h>
+#endif
+
 #include <iostream> //bib padrão
 #include <iomanip> //bib imprimir double formatado
 #include <string> //bib string
@@ -5,6 +12,8 @@
 #include <vector> //bib vector
 #include <locale> //bib local
 #include <limits> //bib limits para limpeza de buffer
+#include <stdexcept>
+
 
 using namespace std;
 
@@ -513,7 +522,6 @@ void verificarId(const vector<T>& vetor, T& novoItem){
                 T::setContador(novoId + 1);
                 break;
             }
-            
         }
     } while (idDuplicado);
     
@@ -585,11 +593,11 @@ void cadastrarTemplate(const string& arqContador, const string& arqBinario){
     items.push_back(novoItem);
 
     salvarArqBinario(items,arqBinario);
-    salvarArqBinario<T>(arqContador);
+    salvarContadorArqBinario<T>(arqContador);
     cout << "Items registrados: " << endl;
     vector<T> itemsLoaded = lerArqBinario<T>(arqBinario);
     for(const auto& item : itemsLoaded){
-        items.visualizar();
+        item.visualizar();
     }
     cout << "---------------------" << endl;
 }
@@ -609,7 +617,7 @@ void cadastrarPassageiro(){
     o Deve garantir que não haja dois membros da tripulação com o mesmo código.
     o Opcionalmente, pode-se gerar o código automaticamente.*/
 void cadastrarTripulacao(){
-   cadastrarTemplate<Tripulacao>("idTripulacao.dat","tripulacao.bin");
+    cadastrarTemplate<Tripulacao>("idTripulacao.dat","tripulacao.bin");
 }
 
 
@@ -839,11 +847,11 @@ void menu(){
 }
 
 
+
+
 void checkOs() {
     #ifdef _WIN32
         try {
-            #define NOMINMAX
-            #include <Windows.h>
             SetConsoleOutputCP(CP_UTF8);  // Configura o console para UTF-8
             SetConsoleCP(CP_UTF8);
 

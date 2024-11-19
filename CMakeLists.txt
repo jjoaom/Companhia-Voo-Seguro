@@ -33,13 +33,10 @@ endif()
 # Adiciona o arquivo de código-fonte
 add_executable(TP-Voo-Seguro main.cpp)
 
-# Caso queira definir o tipo de compilação (Debug, Release)
-set(CMAKE_BUILD_TYPE Release)  # Pode ser ajustado para 'Debug' ou 'RelWithDebInfo' conforme necessário
+# Adiciona o GoogleTest
+enable_testing()
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
 
-# Caso você tenha dependências externas, pode usar find_package ou configurar bibliotecas
-# Exemplo:
-# find_package(Boost REQUIRED)
-# target_link_libraries(TP-Voo-Seguro Boost::Boost)
-
-# Mensagem sobre o sistema operacional
-message(STATUS "Sistema operacional: ${CMAKE_SYSTEM_NAME}")
+# Adiciona o subdiretório de testes
+add_subdirectory(test)
