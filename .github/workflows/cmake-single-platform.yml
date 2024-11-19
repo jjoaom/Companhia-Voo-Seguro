@@ -1,4 +1,4 @@
-name: CMake on Single Platform
+name: CMake on Multiple Platforms
 
 on:
   push:
@@ -10,7 +10,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        compiler: [gcc, clang]
 
     steps:
     - name: Checkout code
@@ -19,18 +23,17 @@ jobs:
     - name: Set up CMake
       uses: jwlawson/actions-setup-cmake@v1
 
-    - name: Install dependencies
+    - name: Install dependencies on Ubuntu
+      if: matrix.os == 'ubuntu-latest'
       run: sudo apt-get install -y build-essential cmake
 
-    - name: Install GoogleTest
-      run: |
-        git clone https://github.com/google/googletest.git
-        cd googletest
-        mkdir build
-        cd build
-        cmake ..
-        make
-        sudo make install
+    - name: Install dependencies on macOS
+      if: matrix.os == 'macos-latest'
+      run: brew install cmake
+
+    - name: Install dependencies on Windows
+      if: matrix.os == 'windows-latest'
+      run: choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
 
     - name: Configure CMake
       run: cmake -B build -S .
