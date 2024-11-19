@@ -18,9 +18,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Evita conflitos com macros max/min no Windows
     add_definitions(-DNOMINMAX)
     
-    # Aqui você pode adicionar configurações específicas para Windows, como linkar bibliotecas específicas, se necessário
-    # Por exemplo: target_link_libraries(TP-Voo-Seguro ws2_32) para usar Winsock
-
     # Adiciona o GoogleTest usando FetchContent no Windows
     include(FetchContent)
     FetchContent_Declare(
