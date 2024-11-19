@@ -3,6 +3,10 @@
 #include <string> //bib string
 #include <fstream> //bib file
 #include <vector> //bib vector
+#include <limits> //bib limits para limpeza de buffer
+#include <locale> //bib local
+#include <Windows.h> //bib acentuação local
+
 
 using namespace std;
 
@@ -43,6 +47,7 @@ class Passageiro{
         cout << "---------------------" << endl;
     }
     void cadastrar() {
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "Informe o nome: " << endl;
         getline(cin, nome);
         cout << "Informe o endereço: " << endl;
@@ -93,7 +98,6 @@ class Passageiro{
         arq.read(reinterpret_cast<char*>(&pontosFidelidade), sizeof(pontosFidelidade));
     }
 };
-int Passageiro::contadorId = 1; // Contador de ID estático
 
 /*TRIPULAÇÃO: código, nome, telefone, cargo (piloto, copiloto, comissário).*/
 class Tripulacao{
@@ -152,6 +156,7 @@ class Tripulacao{
         cout << "---------------------" << endl;
     }
     void cadastrar() {
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "Informe o nome: " << endl;
         getline(cin, nome);
         cout << "Informe o telefone: " << endl;
@@ -189,7 +194,6 @@ class Tripulacao{
         arq.read(reinterpret_cast<char*>(&cargo), sizeof(cargo));
     }
 };
-int Tripulacao::contadorId = 1; // Contador de ID estático
 
 /*VOO: código do voo, data, hora, origem, destino, código do avião, código do piloto,
 código do copiloto, código do comissário, status (ativo/inativo), tarifa.*/
@@ -237,23 +241,33 @@ class Voo{
         cout << "---------------------" << endl;
     }
     void cadastrar() {
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "Informe a data(DD/MM/AAAA) do voo: " << endl;
         getline(cin, data);
+
         cout << "Informe a hora(HH/MM) do voo: " << endl;
         getline(cin, hora);
+
         cout << "Informe a origem: " << endl;
         getline(cin, origem);
+
         cout << "Informe o destino: " << endl;
         getline(cin, destino);
+
         cin.ignore();
+
         cout << "Insira o id do avião: " << endl;
         cin >> idAviao;
+        cin.ignore();
         cout << "Insira o id do piloto: " << endl;
         cin >> idPiloto;
+        cin.ignore();
         cout << "Insira o id do copiloto: " << endl;
         cin >> idCopiloto;
+        cin.ignore();
         cout << "Insira o id do comissário: " << endl;
         cin >> idComissario;
+        cin.ignore();
         cout << "Status do Voo (1 - Ativo, 0 - Inativo): " << endl;
         cin >> status;
         while (status != 0 && status != 1)
@@ -261,6 +275,7 @@ class Voo{
             cout << "Entrada inválida. Informe 1 para Ativo ou 0 para Inativo: ";
             cin >> status;
         }
+        cin.ignore();
         cout << "Insira a tarifa do voo: " << endl;
         cin >> tarifa;
         while (tarifa <= 0)
@@ -268,7 +283,7 @@ class Voo{
             cout << "Entrada inválida. Informe um valor acima de 0: ";
             cin >> tarifa;
         }
-        
+        cin.ignore();
     }
     //metodos para salvar e ler nos arq binarios
     void salvar(ofstream& arq) const{
@@ -328,7 +343,6 @@ class Voo{
         arq.read(reinterpret_cast<char*>(&tarifa), sizeof(tarifa));
     }
 };
-int Voo::contadorId = 1; // Contador de ID estático
 
 /*ASSENTO: número do assento, código do voo, status (ocupado/livre).*/
 class Assento{
@@ -427,8 +441,9 @@ void salvarContadorArqBinario(const string& nomeArquivo){
 template <typename T>
 void lerContadorArqBinario(const string& nomeArquivo){
     ifstream arq(nomeArquivo,ios::binary | ios::in);
-    if(!arq){
-        cerr << "Erro ao abrir o arquivo para leitura." << endl;
+    if (!arq) {
+        // Arquivo não existe, inicialize o contador
+        T::setContador(1);
         return;
     }
 
@@ -506,6 +521,57 @@ void verificarId(const vector<T>& vetor, T& novoItem){
     
 }
 
+//template para inicializar os arquivos das classes
+template <typename T>
+void inicializarArq(const string& nomeArquivo){
+    ifstream arq(nomeArquivo, ios::binary);
+    if (!arq)
+    {
+        vector<T> vetor;
+        ofstream newVetor(nomeArquivo, ios::binary | ios::out);
+        if(newVetor){
+            size_t tamanho = vetor.size();
+            newVetor.write(reinterpret_cast<char*>(&tamanho),sizeof(tamanho));
+            newVetor.close();
+        }else{
+            cerr << "Erro ao criar o arquivo " << nomeArquivo << endl;
+        }
+    }
+    arq.close();
+}
+
+void inicializarArqContador(const string& nomeArquivo){
+    ifstream arq(nomeArquivo,ios::binary);
+    if (!arq)
+    {
+        int contadorInicial = 1;
+        ofstream newContador(nomeArquivo, ios::binary | ios::out);
+        if (newContador)
+        {
+            newContador.write(reinterpret_cast<char*>(&contadorInicial), sizeof(contadorInicial));
+            newContador.close();
+        }else{
+            cerr << "Erro ao criar o contador de arquivo " << nomeArquivo << endl;
+        }
+    }
+    arq.close();
+}
+
+void verificarArquivos(){
+    //iniciando arquivos dos vetores
+    inicializarArq<Passageiro>("passageiro.bin");
+    inicializarArq<Tripulacao>("tripulacao.bin");
+    inicializarArq<Assento>("assento.bin");
+    inicializarArq<Voo>("voo.bin");
+    //iniciando arquivo dos contadores
+    inicializarArqContador("idPassageiro.dat");
+    inicializarArqContador("idTripulacao.dat");
+    inicializarArqContador("idVoo.dat");
+    lerContadorArqBinario<Passageiro>("idPassageiro.dat");
+    lerContadorArqBinario<Tripulacao>("idTripulacao.dat");
+    lerContadorArqBinario<Voo>("idVoo.dat");
+}
+
 /*Funcionalidades a Implementar:*/
 /*1. Cadastro de Passageiro:
     o Deve garantir que não haja dois passageiros com o mesmo código.
@@ -525,7 +591,7 @@ void cadastrarPassageiro(){
     passageiros.push_back(novoPassageiro);
 
     salvarArqBinario(passageiros,"passageiro.bin");
-    salvarContadorArqBinario<Passageiro>("contador_passageiro.dat");
+    salvarContadorArqBinario<Passageiro>("idPassageiro.dat");
 
     cout << "Passageiros registrados: " << endl;
     vector<Passageiro> passageirosLoaded = lerArqBinario<Passageiro>("passageiro.bin");
@@ -789,7 +855,38 @@ void menu(){
     } while (opcao != 9);
 }
 
+
+void checkOs() {
+    #ifdef _WIN32 //check windows 32 ou 64
+        try {
+            // Configura o console para usar UTF-8 (chcp 65001)
+            SetConsoleOutputCP(CP_UTF8);
+            SetConsoleCP(CP_UTF8);
+
+            locale::global(locale("pt_BR.1252"));
+            cout << "Localidade configurada para Windows com sucesso.\n";
+        } catch (const runtime_error& e) {
+            cout << "Falha ao definir a localidade para Windows: " << e.what() << '\n';
+        }
+    #elif __linux__ //check linux
+        try {
+            locale::global(locale("pt_BR.UTF-8"));
+            cout << "Localidade configurada para Linux com sucesso.\n";
+        } catch (const runtime_error& e) {
+            cout << "Falha ao definir a localidade para Linux: " << e.what() << '\n';
+        }
+    #else
+        cout << "Sistema operacional não identificado.\n";
+    #endif
+}
+//Inicializando contadores id
+int Passageiro::contadorId;
+int Tripulacao::contadorId;
+int Voo::contadorId;
+
 int main(){
+    checkOs();
+    verificarArquivos();
     menu();
 
     return 0;
