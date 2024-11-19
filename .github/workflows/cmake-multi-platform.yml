@@ -16,40 +16,42 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up CMake
-      uses: jwlawson/actions-setup-cmake@v1
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v1
 
-    - name: Install dependencies on Ubuntu
-      if: matrix.os == 'ubuntu-latest'
-      run: sudo apt-get install -y build-essential cmake libgtest-dev
+      - name: Install dependencies on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install -y build-essential cmake libgtest-dev
 
-    - name: Install GTest on Ubuntu
-      if: matrix.os == 'ubuntu-latest'
-      run: |
-        sudo apt-get install -y libgtest-dev
-        cd /usr/src/googletest/googletest
-        sudo cmake CMakeLists.txt
-        sudo make
-        sudo cp lib/*.a /usr/lib
+      - name: Install GTest on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install -y libgtest-dev
+          cd /usr/src/googletest/googletest
+          sudo cmake CMakeLists.txt
+          sudo make
+          sudo cp lib/*.a /usr/lib
 
-    - name: Install dependencies on macOS
-      if: matrix.os == 'macos-latest'
-      run: |
-        brew install cmake
-        brew install googletest
+      - name: Install dependencies on macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install cmake
+          brew install googletest
 
-    - name: Install dependencies on Windows
-      if: matrix.os == 'windows-latest'
-      run: choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+          - name: Install dependencies on Windows
+          if: matrix.os == 'windows-latest'
+          run: |
+            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+            choco install googletest
 
-    - name: Configure CMake
-      run: cmake -B build -S .
+      - name: Configure CMake
+        run: cmake -B build -S .
 
-    - name: Build project
-      run: cmake --build build
+      - name: Build project
+        run: cmake --build build
 
-    - name: Run tests
-      run: ctest --test-dir build
+      - name: Run tests
+        run: ctest --test-dir build

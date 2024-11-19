@@ -15,16 +15,11 @@ message(STATUS "CMake versão: ${CMAKE_VERSION}")
 # Defina configurações específicas com base no sistema operacional
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Compilando para Windows")
-    # Evita conflitos com macros max/min no Windows
-    add_definitions(-DNOMINMAX)
-    
-    # Adiciona o GoogleTest usando FetchContent no Windows
     include(FetchContent)
     FetchContent_Declare(
       googletest
       URL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.zip
     )
-    # For Windows: Prevent overriding the parent project's compiler/linker settings
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
     include_directories(${googletest_SOURCE_DIR}/googletest/include ${googletest_SOURCE_DIR}/googletest)
