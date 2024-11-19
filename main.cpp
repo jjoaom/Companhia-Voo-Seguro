@@ -3,10 +3,10 @@
 #include <string> //bib string
 #include <fstream> //bib file
 #include <vector> //bib vector
-#include <limits> //bib limits para limpeza de buffer
 #include <locale> //bib local
+#define NOMINMAX 
 #include <Windows.h> //bib acentuação local
-
+#include <limits> //bib limits para limpeza de buffer
 
 using namespace std;
 
