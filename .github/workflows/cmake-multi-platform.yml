@@ -33,11 +33,13 @@ jobs:
         cd /usr/src/googletest/googletest
         sudo cmake CMakeLists.txt
         sudo make
-        sudo cp googletest/*.a /usr/lib
+        sudo cp lib/*.a /usr/lib
 
     - name: Install dependencies on macOS
       if: matrix.os == 'macos-latest'
-      run: brew install cmake
+      run: |
+        brew install cmake
+        brew install googletest
 
     - name: Install dependencies on Windows
       if: matrix.os == 'windows-latest'
