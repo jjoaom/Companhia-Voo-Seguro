@@ -3,10 +3,8 @@
 #include <string> //bib string
 #include <fstream> //bib file
 #include <vector> //bib vector
-#include <limits> //bib limits para limpeza de buffer
 #include <locale> //bib local
-#include <Windows.h> //bib acentuação local
-
+#include <limits> //bib limits para limpeza de buffer
 
 using namespace std;
 
@@ -842,10 +840,11 @@ void menu(){
 
 
 void checkOs() {
-    #ifdef _WIN32 //check windows 32 ou 64
+    #ifdef _WIN32
         try {
-            // Configura o console para usar UTF-8 (chcp 65001)
-            SetConsoleOutputCP(CP_UTF8);
+            #define NOMINMAX
+            #include <Windows.h>
+            SetConsoleOutputCP(CP_UTF8);  // Configura o console para UTF-8
             SetConsoleCP(CP_UTF8);
 
             locale::global(locale("pt_BR.1252"));
@@ -853,7 +852,7 @@ void checkOs() {
         } catch (const runtime_error& e) {
             cout << "Falha ao definir a localidade para Windows: " << e.what() << '\n';
         }
-    #elif __linux__ //check linux
+    #elif __linux__
         try {
             locale::global(locale("pt_BR.UTF-8"));
             cout << "Localidade configurada para Linux com sucesso.\n";
@@ -864,6 +863,7 @@ void checkOs() {
         cout << "Sistema operacional não identificado.\n";
     #endif
 }
+
 //Inicializando contadores id
 int Passageiro::contadorId;
 int Tripulacao::contadorId;
