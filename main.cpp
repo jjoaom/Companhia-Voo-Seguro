@@ -572,33 +572,37 @@ void verificarArquivos(){
     lerContadorArqBinario<Voo>("idVoo.dat");
 }
 
+//template para funções de cadastro
+template <typename T>
+void cadastrarTemplate(const string& arqContador, const string& arqBinario){
+    //leitura do id generalizado de acordo com o arquivo binario
+    lerContadorArqBinario<T>(arqContador);
+    //cria um vetor lendo do arquivo binario os itens salvos previamente
+    vector<T> items = lerArqBinario<T>(arqBinario);
+    T novoItem;
+    novoItem.cadastrar();
+
+    verificarId(items, novoItem);
+
+    items.push_back(novoItem);
+
+    salvarArqBinario(items,arqBinario);
+    salvarArqBinario<T>(arqContador);
+    cout << "Items registrados: " << endl;
+    vector<T> itemsLoaded = lerArqBinario<T>(arqBinario);
+    for(const auto& item : itemsLoaded){
+        items.visualizar();
+    }
+    cout << "---------------------" << endl;
+}
+
 /*Funcionalidades a Implementar:*/
 /*1. Cadastro de Passageiro:
     o Deve garantir que não haja dois passageiros com o mesmo código.
     o Opcionalmente, pode-se gerar o código automaticamente.*/
 
 void cadastrarPassageiro(){
-    //leitura do id para passageiros de acordo com o arquivo binario
-    lerContadorArqBinario<Passageiro>("idPassageiro.dat");
-    //cria um vetor de passageiros lendo do arquivo binario os passageiros salvos previamente
-    vector<Passageiro> passageiros = lerArqBinario<Passageiro>("passageiro.bin");
-
-    Passageiro novoPassageiro;
-    novoPassageiro.cadastrar();
-    
-    verificarId(passageiros, novoPassageiro);
-
-    passageiros.push_back(novoPassageiro);
-
-    salvarArqBinario(passageiros,"passageiro.bin");
-    salvarContadorArqBinario<Passageiro>("idPassageiro.dat");
-
-    cout << "Passageiros registrados: " << endl;
-    vector<Passageiro> passageirosLoaded = lerArqBinario<Passageiro>("passageiro.bin");
-    for(const auto& p : passageirosLoaded){
-        p.visualizar();
-    }
-    cout << "---------------------" << endl;
+    cadastrarTemplate<Passageiro>("idPassageiro.dat","passageiro.bin");
 }
 
 
@@ -607,26 +611,7 @@ void cadastrarPassageiro(){
     o Deve garantir que não haja dois membros da tripulação com o mesmo código.
     o Opcionalmente, pode-se gerar o código automaticamente.*/
 void cadastrarTripulacao(){
-    lerContadorArqBinario<Tripulacao>("idTripulacao.dat");
-    vector<Tripulacao> tripulantes = lerArqBinario<Tripulacao>("tripulacao.bin");
-
-    Tripulacao novoTripulante;
-    novoTripulante.cadastrar();
-
-    verificarId(tripulantes,novoTripulante);
-
-    tripulantes.push_back(novoTripulante);
-
-    salvarArqBinario(tripulantes, "tripulacao.bin");
-    salvarContadorArqBinario<Tripulacao>("idTripulacao.dat");
-
-    cout << "Tripulantes registrados: " << endl;
-    vector<Tripulacao> tripulantesLoaded = lerArqBinario<Tripulacao>("tripulacao.bin");
-    for (const auto& t : tripulantesLoaded)
-    {
-        t.visualizar();
-    }
-    cout << "---------------------" << endl;
+   cadastrarTemplate<Tripulacao>("idTripulacao.dat","tripulacao.bin");
 }
 
 
