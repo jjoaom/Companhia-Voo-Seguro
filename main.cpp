@@ -6,32 +6,6 @@
 
 using namespace std;
 
-// metodos para lidar com o contador de ID estático em arquivo binário
-void loadContadorId(const string &nomeArquivo, int &contadorId)
-{
-    ifstream arq(nomeArquivo, ios::binary);
-    if (arq)
-    {
-        arq.read(reinterpret_cast<char *>(&contadorId), sizeof(contadorId));
-    }
-    else
-    {
-        contadorId = 1;
-    }
-}
-void saveContadorId(const string &nomeArquivo, int &contadorId)
-{
-    ofstream arq(nomeArquivo, ios::binary);
-    if (arq)
-    {
-        arq.write(reinterpret_cast<const char *>(&contadorId), sizeof(contadorId));
-    }
-    else
-    {
-        cerr << "Erro ao abrir o arquivo para salvar o ID" << endl;
-    }
-}
-
 /*PASSAGEIRO: código, nome, endereço, telefone, fidelidade (sim/não), pontos
 fidelidade.*/
 class Passageiro{
@@ -428,7 +402,33 @@ class Reserva{
 };
 
 
-/*O que são templates? Templates são uma característica na linguagem que permite escrever um código genérico que pode ser reutilizado para diferentes tipos.*/
+/* metodos para lidar com o contador de ID estático em arquivo binário
+void loadContadorId(const string &nomeArquivo, int &contadorId)
+{
+    ifstream arq(nomeArquivo, ios::binary | ios::in);
+    if (arq)
+    {
+        arq.read(reinterpret_cast<char *>(&contadorId), sizeof(contadorId));
+    }
+    else
+    {
+        contadorId = 1;
+    }
+}
+void saveContadorId(const string &nomeArquivo, int &contadorId)
+{
+    ofstream arq(nomeArquivo, ios::binary) | ios::out;
+    if (arq)
+    {
+        arq.write(reinterpret_cast<const char *>(&contadorId), sizeof(contadorId));
+    }
+    else
+    {
+        cerr << "Erro ao abrir o arquivo para salvar o ID" << endl;
+    }
+} */
+
+/*Templates são uma característica na linguagem que permite escrever um código genérico que pode ser reutilizado para diferentes tipos.*/
 //templates para manipulação do contadorId estático nos arquivos binários
 template <typename T>
 void salvarContadorArqBinario(const string& nomeArquivo){
