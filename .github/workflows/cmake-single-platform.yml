@@ -1,4 +1,4 @@
-name: CMake on Multiple Platforms
+name: CMake on Single Platform (Windows)
 
 on:
   push:
@@ -10,11 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        compiler: [gcc, clang]
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
@@ -23,16 +19,7 @@ jobs:
     - name: Set up CMake
       uses: jwlawson/actions-setup-cmake@v1
 
-    - name: Install dependencies on Ubuntu
-      if: matrix.os == 'ubuntu-latest'
-      run: sudo apt-get install -y build-essential cmake
-
-    - name: Install dependencies on macOS
-      if: matrix.os == 'macos-latest'
-      run: brew install cmake
-
-    - name: Install dependencies on Windows
-      if: matrix.os == 'windows-latest'
+    - name: Install dependencies
       run: choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
 
     - name: Configure CMake
