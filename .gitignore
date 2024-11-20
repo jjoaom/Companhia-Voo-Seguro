@@ -1,2 +1,21 @@
+# Build directories
 build/
-main.exe
+CMakeFiles/
+CMakeCache.txt
+
+# Compiled files
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.so
+*.dll
+
+# Coverage reports
+*.gcda
+*.gcno
+*.gcov
+
+# Outros arquivos temporários
+*.log
