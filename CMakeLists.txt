@@ -19,7 +19,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    message(STATUS "Compilando para Windows")
+    message(STATUS "Usando GoogleTest manualmente no Windows")
     include(FetchContent)
     FetchContent_Declare(
       googletest
@@ -28,8 +28,16 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     FetchContent_MakeAvailable(googletest)
     set(GTEST_LIBRARIES gtest)
     set(GTEST_MAIN_LIBRARIES gtest_main)
-    include_directories(${GTEST_INCLUDE_DIRS})
 endif()
+
+# Adiciona os arquivos de teste
+add_executable(runTests test_main.cpp)
+
+# Linka o GoogleTest
+target_link_libraries(runTests ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+
+# Adiciona os testes
+add_test(NAME TestePassageiro COMMAND runTests)
 
 # Adiciona o arquivo de código-fonte
 add_executable(TP-Voo-Seguro main.cpp)
