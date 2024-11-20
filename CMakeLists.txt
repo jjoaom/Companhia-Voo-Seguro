@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 # Nome do projeto
-project(TP-Voo-Seguro)
+project(Companhia-Voo-Seguro)
 
 # Defina a versão do C++ que você quer usar
 set(CMAKE_CXX_STANDARD 17)
@@ -22,22 +22,22 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_link_libraries(TP-Voo-Seguro ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+    target_link_libraries(main ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
 else()
-    target_link_libraries(TP-Voo-Seguro GTest::gtest GTest::gtest_main pthread)
+    target_link_libraries(main GTest::gtest GTest::gtest_main pthread)
 endif()
 
 # Adiciona o arquivo de código-fonte principal
-add_executable(TP-Voo-Seguro main.cpp)
-target_link_libraries(TP-Voo-Seguro ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+add_executable(main main.cpp)
+target_link_libraries(main ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
 # Linka o GoogleTest
 enable_testing()
 
 # Configura o link do GoogleTest
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_link_libraries(TP-Voo-Seguro ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+    target_link_libraries(main ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
 else()
-    target_link_libraries(TP-Voo-Seguro GTest::gtest GTest::gtest_main)
+    target_link_libraries(main GTest::gtest GTest::gtest_main)
 endif()
 
 # Adiciona o subdiretório de testes
