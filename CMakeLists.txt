@@ -31,13 +31,13 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 # Adiciona os arquivos de teste
-add_executable(runTests test_main.cpp)
+add_executable(runTestsMain test_main.cpp)
 
 # Linka o GoogleTest
-target_link_libraries(runTests ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+target_link_libraries(runTestsMain ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
 
 # Adiciona os testes
-add_test(NAME TestePassageiro COMMAND runTests)
+add_test(NAME TestePassageiro COMMAND runTestsMain)
 
 # Adiciona o arquivo de código-fonte
 add_executable(TP-Voo-Seguro main.cpp)
