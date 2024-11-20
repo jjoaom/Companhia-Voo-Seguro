@@ -14,9 +14,14 @@ message(STATUS "CMake versão: ${CMAKE_VERSION}")
 
 # Verifica se o GoogleTest foi encontrado corretamente
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    # Se estiver no Windows e usando vcpkg
     message(STATUS "Compilando para Windows")
-    find_package(GTest REQUIRED CONFIG PATHS $ENV{VCPKG_ROOT}/installed/x64-windows/share/google/googletest)
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2")
+        message(FATAL_ERROR "GoogleTest not found. Please ensure it is installed or manually download it.")
+    endif()
+    set(GTEST_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2/googletest/include")
+    set(GTEST_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2/googletest/libgtest.a")
+    include_directories(${GTEST_INCLUDE_DIRS})
+endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     # Se estiver no macOS
     message(STATUS "Compilando para macOS")
