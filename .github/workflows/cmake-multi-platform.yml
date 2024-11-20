@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
       - name: Checkout code
@@ -22,8 +22,7 @@ jobs:
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
 
-      # Instalação do GoogleTest no Ubuntu (sem vcpkg)
-      - name: Install GTest on Ubuntu
+      - name: Install dependencies on Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
@@ -33,27 +32,15 @@ jobs:
           sudo make
           sudo cp lib/*.a /usr/lib
 
-      # Instalação do GoogleTest no macOS (sem vcpkg)
       - name: Install GTest on macOS
         if: matrix.os == 'macos-latest'
         run: |
           brew install cmake
           brew install googletest
 
-      # Instalação do vcpkg no Windows e GoogleTest
-      - name: Install vcpkg and GTest on Windows
-        if: matrix.os == 'windows-latest'
-        run: |
-          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-          choco install git
-          choco install visualstudio2019buildtools
-          git clone https://github.com/microsoft/vcpkg.git
-          .\vcpkg\bootstrap-vcpkg.bat
-          .\vcpkg\vcpkg install gtest
 
       - name: Configure CMake
-        run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmake
-        if: matrix.os == 'windows-latest'
+        run: cmake -B build -S .
 
       - name: Build project
         run: cmake --build build
