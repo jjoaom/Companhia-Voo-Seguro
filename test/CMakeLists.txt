@@ -10,11 +10,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(GTEST_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/../googletest-release-1.15.2/googletest/libgtest.a)
     set(GTEST_MAIN_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/../googletest-release-1.15.2/googletest/libgtest_main.a)
 else()
-    # Para outros sistemas, usa o find_package normalmente
+    # Para outros sistemas, usa o FetchContent para baixar o GoogleTest
     include(FetchContent)
     FetchContent_Declare(
       googletest
-      URL https://github.com/google/googletest/archive/refs/tags/release-1.15.2.zip
+      URL https://github.com/google/googletest/archive/refs/tags/v1.15.2.zip
     )
     FetchContent_MakeAvailable(googletest)
     set(GTEST_LIBRARIES gtest)
