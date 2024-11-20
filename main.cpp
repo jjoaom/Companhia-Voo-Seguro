@@ -10,7 +10,6 @@
 #include <string> //bib string
 #include <fstream> //bib file
 #include <vector> //bib vector
-#include <locale> //bib local
 #include <limits> //bib limits para limpeza de buffer
 #include <stdexcept>
 
@@ -864,7 +863,6 @@ void checkOs() {
             SetConsoleOutputCP(CP_UTF8);  // Configura o console para UTF-8
             SetConsoleCP(CP_UTF8);
 
-            locale::global(locale("pt_BR.1252"));
             cout << "Localidade configurada para Windows com sucesso.\n";
         } catch (const runtime_error& e) {
             cout << "Falha ao definir a localidade para Windows: " << e.what() << '\n';
