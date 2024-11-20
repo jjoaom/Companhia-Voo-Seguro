@@ -16,19 +16,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up CMake
-        uses: jwlawson/actions-setup-cmake@v2
-
       - name: Install dependencies on Windows
         run: |
-          # Clonar vcpkg diretamente do GitHub
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          ./bootstrap-vcpkg.sh
-          # Usar .\ para rodar o vcpkg no PowerShell
-          .\vcpkg integrate install
-          # Instalar o GoogleTest
-          .\vcpkg install gtest
+          # Baixar GoogleTest diretamente do GitHub
+          git clone https://github.com/google/googletest.git
+          cd googletest
+          # Baixar submódulos (caso necessário)
+          git submodule update --init --recursive
+          # Criar diretório de build
+          mkdir build
+          cd build
+          # Configurar e compilar o GoogleTest manualmente (pode ser adaptado conforme necessidade)
+          cmake ..
+          cmake --build .
 
       - name: Configure CMake
         run: cmake -B build -S .
