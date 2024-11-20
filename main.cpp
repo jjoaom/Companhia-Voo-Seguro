@@ -249,7 +249,7 @@ class Voo{
     void setIdCopiloto(int id) { idCopiloto = id; }
     int getIdComissario() const { return idComissario; }
     void setIdComissario(int id) { idComissario = id; }
-    bool getStatus() const { return status};
+    bool getStatus() const { return status;}
     void setStatus(bool s) { status = s;}
 
 
@@ -730,6 +730,7 @@ void cadastrarAssentos(){
     o Deve garantir que o assento esteja disponível antes de reservar.
     o Reservas duplicadas para o mesmo assento no mesmo voo devem ser evitadas.*/
 
+ 
 
 /*6. Baixa em Reserva:
     o Deve liberar o assento e atualizar o status para livre.
