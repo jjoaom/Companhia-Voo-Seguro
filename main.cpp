@@ -154,6 +154,15 @@ class Tripulacao{
 
     string getNome() const { return nome; }
     Cargo getCargo() const {return cargo;}
+    int verificaCargo(int cargo) const {
+        if(cargo == 1){
+            return '1';
+        }else if( cargo == 2){
+            return '2';
+        }else if(cargo == 3){
+            return '3';
+        }
+    }
 
     void visualizar() const {
         cout << "ID: " << id << endl;
@@ -234,6 +243,15 @@ class Voo{
 
     static int getContador() { return contadorId; }
     static void setContador(int newId) { contadorId = newId; }
+    int getIdPiloto() const { return idPiloto; }
+    void setIdPiloto(int id) { idPiloto = id; }
+    int getIdCopiloto() const { return idCopiloto; }
+    void setIdCopiloto(int id) { idCopiloto = id; }
+    int getIdComissario() const { return idComissario; }
+    void setIdComissario(int id) { idComissario = id; }
+    bool getStatus() const { return status};
+    void setStatus(bool s) { status = s;}
+
 
     void visualizar() const {
         cout << "ID: " << id << endl;
@@ -274,14 +292,6 @@ class Voo{
         cin.ignore();
         cout << "Insira o id do comissário: " << endl;
         cin >> idComissario;
-        cin.ignore();
-        cout << "Status do Voo (1 - Ativo, 0 - Inativo): " << endl;
-        cin >> status;
-        while (status != 0 && status != 1)
-        {
-            cout << "Entrada inválida. Informe 1 para Ativo ou 0 para Inativo: ";
-            cin >> status;
-        }
         cin.ignore();
         cout << "Insira a tarifa do voo: " << endl;
         cin >> tarifa;
@@ -602,6 +612,7 @@ void cadastrarTemplate(const string& arqContador, const string& arqBinario){
     cout << "---------------------" << endl;
 }
 
+
 /*Funcionalidades a Implementar:*/
 /*1. Cadastro de Passageiro:
     o Deve garantir que não haja dois passageiros com o mesmo código.
@@ -627,19 +638,62 @@ void cadastrarTripulacao(){
     o Deve verificar a presença de ao menos um piloto e um copiloto para que o voo
     seja marcado como ativo.*/
 
-void cadastrarVoo(){
-    vector<Voo> voos;
+//função para verificar a presença de ao menos um piloto e um copiloto para marcar o voo como ativo
+void verificaVooAtivo(Voo& novoVoo) {
+    vector<Tripulacao> tripulacaoLoaded = lerArqBinario<Tripulacao>("tripulacao.bin");
+
+    bool pilotoEncontrado = false;
+    bool copilotoEncontrado = false;
+    //laço range based que percorre o vetor de tripulação em busca do tripulante com o id digitado e cargo piloto
+    for (const auto& t : tripulacaoLoaded) {
+        if (t.getId() == novoVoo.getIdPiloto() && t.getCargo() == Tripulacao::Cargo::Piloto) {
+            pilotoEncontrado = true;
+        }
+        if (t.getId() == novoVoo.getIdCopiloto() && t.getCargo() == Tripulacao::Cargo::Copiloto) {
+            copilotoEncontrado = true;
+        }
+    }
+
+    if (pilotoEncontrado && copilotoEncontrado) {
+        novoVoo.setStatus(true); // Marcar o voo como ativo
+    } else {
+        novoVoo.setStatus(false); // Marcar o voo como inativo
+        cout << "Este voo foi marcado como inativo devido à ausência de piloto e copiloto." << endl;
+        cout << "Deseja cadastrar novos pilotos e copilotos? (1 - Sim, 2 - Não): ";
+        int opcao;
+        cin >> opcao;
+        if (opcao == 1) {
+            int novoIdPiloto, novoIdCopiloto;
+            cout << "Digite o ID do novo piloto: ";
+            cin >> novoIdPiloto;
+            cout << "Digite o ID do novo copiloto: ";
+            cin >> novoIdCopiloto;
+            novoVoo.setIdPiloto(novoIdPiloto);
+            novoVoo.setIdCopiloto(novoIdCopiloto);
+            verificaVooAtivo(novoVoo); // Verificar novamente com os novos IDs
+        }
+    }
+}
+
+void cadastrarVoo() {
+    lerContadorArqBinario<Voo>("idVoo.dat");
+
+    vector<Voo> voos = lerArqBinario<Voo>("voo.bin");
     Voo novoVoo;
     novoVoo.cadastrar();
 
-    verificarId(voos,novoVoo);
+    verificarId(voos, novoVoo);
+
+    verificaVooAtivo(novoVoo);
 
     voos.push_back(novoVoo);
-    salvarArqBinario(voos,"voo.bin");
+
+    salvarArqBinario(voos, "voo.bin");
+    salvarContadorArqBinario<Voo>("idVoo.dat");
 
     cout << "Voos registrados" << endl;
     vector<Voo> voosLoaded = lerArqBinario<Voo>("voo.bin");
-    for(const auto& v : voosLoaded){
+    for (const auto& v : voosLoaded) {
         v.visualizar();
     }
     cout << "---------------------" << endl;
@@ -653,6 +707,7 @@ void cadastrarAssentos(){
     cout << "Cadastro de Assento" << endl;
     cout << "Insira o ID do Voo: " << endl;
     cin >> idVoo;
+    //devo inserir uma função para verificar se o id corresponde a algum voo cadastrado no arquivo de voo
     cout << "Insira a quantidade de assentos disponíveis no voo: " << endl;
     cin >> numAssentos;
     vector<Assento> Assentos;
