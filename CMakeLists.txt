@@ -15,20 +15,12 @@ message(STATUS "CMake versão: ${CMAKE_VERSION}")
 # Defina configurações específicas com base no sistema operacional
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Compilando para Windows")
-    include(FetchContent)
-    FetchContent_Declare(
-      googletest
-      URL https://github.com/google/googletest/archive/refs/heads/main.zip
-    )
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-    FetchContent_MakeAvailable(googletest)
-    include_directories(${googletest_SOURCE_DIR}/googletest/include ${googletest_SOURCE_DIR}/googletest)
-
+    # No Windows, o GoogleTest será configurado pelo workflow
+    include_directories("googletest-release-1.15.2/googletest/include" "googletest-release-1.15.2/googlemock/include")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Compilando para macOS")
     find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS})
-
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(STATUS "Compilando para Linux")
 endif()
