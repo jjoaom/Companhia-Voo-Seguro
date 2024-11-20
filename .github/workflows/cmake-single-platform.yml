@@ -21,13 +21,14 @@ jobs:
 
       - name: Install dependencies on Windows
         run: |
-          # Baixar o vcpkg usando curl
-          Invoke-WebRequest -Uri https://github.com/microsoft/vcpkg/releases/download/2023.02.14/vcpkg-windows-x64.zip -OutFile vcpkg.zip
-          Expand-Archive -Path vcpkg.zip -DestinationPath vcpkg
+          # Clonar vcpkg diretamente do GitHub
+          git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
-          .\vcpkg integrate install
+          ./bootstrap-vcpkg.sh
+          ./vcpkg integrate install
           # Instalar o GoogleTest
-          .\vcpkg install gtest
+          ./vcpkg install gtest
+
 
       - name: Configure CMake
         run: cmake -B build -S .
