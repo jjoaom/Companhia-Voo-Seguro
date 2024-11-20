@@ -41,11 +41,11 @@ jobs:
           brew install cmake
           brew install googletest
 
-          - name: Install dependencies on Windows
-          if: matrix.os == 'windows-latest'
-          run: |
-            choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-            choco install googletest
+      - name: Install dependencies on Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+          choco install googletest
 
       - name: Configure CMake
         run: cmake -B build -S .
