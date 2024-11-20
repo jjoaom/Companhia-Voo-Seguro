@@ -29,7 +29,7 @@ endif()
 
 # Adiciona o arquivo de código-fonte principal
 add_executable(TP-Voo-Seguro main.cpp)
-
+target_link_libraries(TP-Voo-Seguro ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
 # Linka o GoogleTest
 enable_testing()
 
