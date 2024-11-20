@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # Especifica que o trabalho será executado no Windows
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -42,3 +42,6 @@ jobs:
 
       - name: Run tests
         run: ctest --test-dir build
+
+      - name: Linker settings to avoid conflicts
+        run: cmake -B build -S . -DCMAKE_EXE_LINKER_FLAGS="/NODEFAULTLIB:libcpmtd.lib"
