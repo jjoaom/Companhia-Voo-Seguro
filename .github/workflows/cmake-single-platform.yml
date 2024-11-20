@@ -25,9 +25,10 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
           ./bootstrap-vcpkg.sh
-          ./vcpkg integrate install
+          # Usar .\ para rodar o vcpkg no PowerShell
+          .\vcpkg integrate install
           # Instalar o GoogleTest
-          ./vcpkg install gtest
+          .\vcpkg install gtest
 
       - name: Configure CMake
         run: cmake -B build -S .
