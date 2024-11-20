@@ -29,7 +29,6 @@ jobs:
           # Instalar o GoogleTest
           ./vcpkg install gtest
 
-
       - name: Configure CMake
         run: cmake -B build -S .
 
