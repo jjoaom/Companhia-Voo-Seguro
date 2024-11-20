@@ -12,28 +12,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(STATUS "Compilando para o sistema: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "CMake versão: ${CMAKE_VERSION}")
 
-# Defina configurações específicas com base no sistema operacional
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    message(STATUS "Compilando para Windows")
-    # Verifique se o GoogleTest foi descompactado corretamente
-    set(GTEST_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2/googletest/include")
-    set(GTEST_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2/googletest/libgtest.a")
-    include_directories(${GTEST_INCLUDE_DIRS})
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    message(STATUS "Compilando para macOS")
-    find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(STATUS "Compilando para Linux")
-endif()
+# Verifique se o GoogleTest foi encontrado corretamente
+find_package(GTest REQUIRED)
+
+# Mensagem de sucesso se o GoogleTest for encontrado
+message(STATUS "GoogleTest encontrado em: ${GTEST_INCLUDE_DIRS}")
 
 # Adiciona o arquivo de código-fonte
 add_executable(TP-Voo-Seguro main.cpp)
 
-# Adiciona o GoogleTest
+# Adiciona o GoogleTest (necessário para rodar os testes)
 enable_testing()
-find_package(GTest REQUIRED)
+
+# Inclui os diretórios de cabeçalhos do GoogleTest
 include_directories(${GTEST_INCLUDE_DIRS})
 
 # Adiciona o subdiretório de testes
 add_subdirectory(test)
+
