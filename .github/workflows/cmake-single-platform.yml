@@ -1,0 +1,47 @@
+name: CMake on Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies on Windows
+        run: |
+          # Baixar GoogleTest diretamente do GitHub
+          git clone https://github.com/google/googletest.git
+          cd googletest
+          # Baixar submódulos (caso necessário)
+          git submodule update --init --recursive
+          # Criar diretório de build
+          mkdir build
+          cd build
+          # Configurar e compilar o GoogleTest manualmente (pode ser adaptado conforme necessidade)
+          cmake ..
+          cmake --build .
+
+          # Definir as variáveis de ambiente para o GoogleTest compilado
+          echo "GTEST_INCLUDE_DIR=$(pwd)/googletest/include" >> $GITHUB_ENV
+          echo "GTEST_MAIN_LIBRARY=$(pwd)/googletest/lib/libgtest.a" >> $GITHUB_ENV
+
+      - name: Configure CMake
+        run: cmake -B build -S . -DGTEST_INCLUDE_DIR=${{ env.GTEST_INCLUDE_DIR }} -DGTEST_MAIN_LIBRARY=${{ env.GTEST_MAIN_LIBRARY }}
+
+      - name: Build project
+        run: cmake --build build
+
+      - name: Run tests
+        run: ctest --test-dir build
+
+      - name: Linker settings to avoid conflicts
+        run: cmake -B build -S . -DCMAKE_EXE_LINKER_FLAGS="/NODEFAULTLIB:libcpmtd.lib"

@@ -715,13 +715,15 @@ void pesquisaPassageiro()
     int buscaId;
     string buscaNome;
     int tipoPesquisa = menuPesquisa(buscaId, buscaNome);
-    vector<Passageiro> passageirosLidos = lerArqBinario<Passageiro>("passageiros.bin");
+    vector<Passageiro> passageirosLidos = lerArqBinario<Passageiro>("passageiro.bin");
     for (const auto &p : passageirosLidos)
     {
         if (tipoPesquisa == 1){
             if (p.getId() == buscaId)
             {
                 p.visualizar();
+            }else{
+                cout << "Passageiro não encontrado." << endl;
             }
             
         }
@@ -729,6 +731,8 @@ void pesquisaPassageiro()
             if (p.getNome() == buscaNome)
             {
                 p.visualizar();
+            }else{
+                cout << "Passageiro não encontrado." << endl;
             }
             
         }
@@ -746,6 +750,8 @@ void pesquisarTripulacao(){
             if (t.getId() == buscaId)
             {
                 t.visualizar();
+            }else{
+                cout << "Tripulação não encontrada." << endl;
             }
             
         }
@@ -753,6 +759,8 @@ void pesquisarTripulacao(){
             if (t.getNome() == buscaNome)
             {
                 t.visualizar();
+            }else{
+                cout << "Tripulação não encontrada." << endl;
             }
             
         }
