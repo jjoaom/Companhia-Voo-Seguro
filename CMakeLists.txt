@@ -13,11 +13,37 @@ message(STATUS "Compilando para o sistema: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "CMake versão: ${CMAKE_VERSION}")
 
 # Defina configurações específicas com base no sistema operacional
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+# Verifica se o GoogleTest foi encontrado corretamente
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    message(STATUS "Compilando para macOS")
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    message(STATUS "Compilando para Linux")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Compilando para Windows")
-    # Verifique se o GoogleTest foi descompactado corretamente
+
+    # Se o diretório googletest não existir, vamos fazer o download
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2")
+        message(STATUS "GoogleTest não encontrado, baixando...")
+        
+        # Baixa o GoogleTest do GitHub
+        file(DOWNLOAD "https://github.com/google/googletest/archive/refs/tags/release-1.15.2.tar.gz"
+             "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2.tar.gz")
+        
+        # Descompacta o arquivo tar.gz
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2.tar.gz"
+                        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+
+        # Remove o arquivo .tar.gz após descompactar
+        file(REMOVE "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2.tar.gz")
+    endif()
+
+    # Defina os diretórios de inclusão e a biblioteca do GoogleTest
     set(GTEST_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2/googletest/include")
     set(GTEST_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/googletest-release-1.15.2/googletest/libgtest.a")
+
+    # Inclui o diretório de cabeçalhos do GoogleTest
     include_directories(${GTEST_INCLUDE_DIRS})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     message(STATUS "Compilando para macOS")
