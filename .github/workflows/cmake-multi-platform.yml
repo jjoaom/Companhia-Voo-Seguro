@@ -45,7 +45,15 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-          choco install googletest
+          # Alternative installation for googletest if not found on Chocolatey
+          if (!(choco list --local-only | Select-String -Pattern "googletest")) {
+            Write-Host "googletest not found in Chocolatey. Installing manually..."
+            Invoke-WebRequest -Uri "https://github.com/google/googletest/archive/release-1.11.0.zip" -OutFile "googletest.zip"
+            Expand-Archive -Path "googletest.zip" -DestinationPath "."
+            cd "googletest-release-1.11.0"
+            cmake -S . -B build
+            cmake --build build --target install
+          }
 
       - name: Configure CMake
         run: cmake -B build -S .
