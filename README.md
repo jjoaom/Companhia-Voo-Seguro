@@ -5,9 +5,9 @@
 Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **Voo Seguro**, desenvolvido em C++ como parte de um trabalho interdisciplinar do curso de Engenharia de Software. Ele visa resolver problemas relacionados à gestão de voos, reservas, tripulação e passageiros, utilizando arquivos binários para persistência de dados e bibliotecas para modularização do software.
 
 ---
-![Build Status](https://img.shields.io/github/actions/workflow/status/jjoaom/TP-AEDS-Voo-Seguro/cmake-multi-platform.yml?branch=main)
-![Coverage](https://img.shields.io/codecov/c/github/jjoaom/TP-AEDS-Voo-Seguro)
-![License](https://img.shields.io/github/license/jjoaom/TP-AEDS-Voo-Seguro)
+![Build Status](https://img.shields.io/github/actions/workflow/status/jjoaom/Companhia-Voo-Seguro/cmake-multi-platform.yml?branch=main)
+![Coverage](https://img.shields.io/codecov/c/github/jjoaom/Companhia-Voo-Seguro)
+![License](https://img.shields.io/github/license/jjoaom/Companhia-Voo-Seguro)
 
 ## Sumário
 - [Descrição do Projeto](#descrição-do-projeto)
@@ -46,12 +46,12 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 4. Compile o programa principal:
    ```bash
-   g++ -o TP-Voo-Seguro main.cpp 
+   g++ -o main main.cpp 
    ```
 
 5. Execute o programa:
    ```bash
-   TP-Voo-Seguro.exe
+   main.exe
    ```
 #### Opção 2: Usando MSVC
 

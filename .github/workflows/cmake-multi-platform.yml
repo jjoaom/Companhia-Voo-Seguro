@@ -38,7 +38,6 @@ jobs:
           brew install cmake
           brew install googletest
 
-
       - name: Configure CMake
         run: cmake -B build -S .
 
@@ -47,3 +46,8 @@ jobs:
 
       - name: Run tests
         run: ctest --test-dir build
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
