@@ -16,23 +16,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies on Windows
+      - name: Set up CMake
+        uses: lukka/get-cmake@v3
+
+      - name: Cache GoogleTest
+        uses: actions/cache@v3
+        with:
+          path: googletest
+          key: ${{ runner.os }}-googletest
+          restore-keys: |
+            ${{ runner.os }}-googletest
+
+      - name: Install GoogleTest
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          # Baixar GoogleTest diretamente do GitHub
           git clone https://github.com/google/googletest.git
           cd googletest
-          # Baixar submódulos (caso necessário)
           git submodule update --init --recursive
-          # Criar diretório de build
           mkdir build
           cd build
-          # Configurar e compilar o GoogleTest manualmente (pode ser adaptado conforme necessidade)
           cmake ..
           cmake --build .
-
-          # Definir as variáveis de ambiente para o GoogleTest compilado
-          echo "GTEST_INCLUDE_DIR=$(pwd)/googletest/include" >> $GITHUB_ENV
-          echo "GTEST_MAIN_LIBRARY=$(pwd)/googletest/lib/libgtest.a" >> $GITHUB_ENV
+          echo "GTEST_INCLUDE_DIR=$(pwd)/include" >> $GITHUB_ENV
+          echo "GTEST_MAIN_LIBRARY=$(pwd)/lib/libgtest.lib" >> $GITHUB_ENV
 
       - name: Configure CMake
         run: cmake -B build -S . -DGTEST_INCLUDE_DIR=${{ env.GTEST_INCLUDE_DIR }} -DGTEST_MAIN_LIBRARY=${{ env.GTEST_MAIN_LIBRARY }}
