@@ -12,6 +12,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(STATUS "Compilando para o sistema: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "CMake versão: ${CMAKE_VERSION}")
 
+# Add this line to set the runtime library
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 # Defina configurações específicas com base no sistema operacional
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(STATUS "Compilando para macOS/Linux")
@@ -19,15 +22,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_package(GTest REQUIRED)
     include_directories(${GTEST_INCLUDE_DIRS})
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    message(STATUS "Usando GoogleTest manualmente no Windows")
-    include(FetchContent)
-    FetchContent_Declare(
-      googletest
-      URL https://github.com/google/googletest/archive/refs/tags/release-1.12.1.zip
-    )
-    FetchContent_MakeAvailable(googletest)
-    set(GTEST_LIBRARIES gtest)
-    set(GTEST_MAIN_LIBRARIES gtest_main)
+    target_link_libraries(TP-Voo-Seguro ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+else()
+    target_link_libraries(TP-Voo-Seguro GTest::gtest GTest::gtest_main pthread)
 endif()
 
 # Adiciona o arquivo de código-fonte principal
