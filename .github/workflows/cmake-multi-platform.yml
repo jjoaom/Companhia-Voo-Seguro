@@ -22,42 +22,36 @@ jobs:
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
 
-      # Instala as dependências no Ubuntu
       - name: Install dependencies on Ubuntu
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake libgtest-dev
-
-      # Instala o GoogleTest no Ubuntu
-      - name: Install GTest on Ubuntu
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get install -y libgtest-dev
           cd /usr/src/googletest/googletest
           sudo cmake CMakeLists.txt
           sudo make
           sudo cp lib/*.a /usr/lib
 
-      # Instala as dependências no macOS
-      - name: Install dependencies on macOS
+      - name: Install GTest on macOS
         if: matrix.os == 'macos-latest'
         run: |
-          brew install cmake googletest
+          brew install cmake
+          brew install googletest
 
-      # Instala as dependências no Windows
-      - name: Install dependencies on Windows
+      - name: Install GTest on Windows
         if: matrix.os == 'windows-latest'
         run: |
           choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-          # Instala o GoogleTest manualmente no Windows caso não esteja disponível
+          # Instalar o GoogleTest manualmente no Windows
           if (!(choco list --local-only | Select-String -Pattern "googletest")) {
             Write-Host "googletest não encontrado no Chocolatey. Instalando manualmente..."
             Invoke-WebRequest -Uri "https://github.com/google/googletest/releases/download/v1.15.2/googletest-1.15.2.tar.gz" -OutFile "googletest-1.15.2.tar.gz"
             Expand-Archive -Path "googletest-1.15.2.tar.gz" -DestinationPath "."
             cd "googletest-release-1.15.2"
-            cmake -S . -B build
-            cmake --build build --target install
+            mkdir build
+            cd build
+            cmake ..
+            cmake --build . --target install
           }
 
       - name: Configure CMake
