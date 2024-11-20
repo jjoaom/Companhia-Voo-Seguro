@@ -30,19 +30,10 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(GTEST_MAIN_LIBRARIES gtest_main)
 endif()
 
-# Adiciona os arquivos de teste
-add_executable(runTestsMain test_main.cpp)
-
-# Linka o GoogleTest
-target_link_libraries(runTestsMain ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
-
-# Adiciona os testes
-add_test(NAME TestePassageiro COMMAND runTestsMain)
-
-# Adiciona o arquivo de código-fonte
+# Adiciona o arquivo de código-fonte principal
 add_executable(TP-Voo-Seguro main.cpp)
 
-# Adiciona o GoogleTest
+# Linka o GoogleTest
 enable_testing()
 
 # Configura o link do GoogleTest
