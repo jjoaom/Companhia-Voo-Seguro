@@ -4,10 +4,12 @@ enable_testing()
 # Verifica se o GoogleTest está sendo configurado manualmente no Windows
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Usando GoogleTest manualmente no Windows")
-    # Inclui os diretórios de cabeçalhos do GoogleTest
+    # Adiciona o diretório de cabeçalhos do GoogleTest
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../googletest-release-1.15.2/googletest/include)
-    # Linka a biblioteca do GoogleTest
-    set(GTEST_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/../googletest-release-1.15.2/googletest/libgtest.a)
+    # Adiciona o diretório de bibliotecas do GoogleTest
+    link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../googletest-release-1.15.2/googletest)
+    # Defina a variável para a biblioteca
+    set(GTEST_LIBRARIES gtest gtest_main)
 else()
     # Para outros sistemas, usa o find_package normalmente
     find_package(GTest REQUIRED)
