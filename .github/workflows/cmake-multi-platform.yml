@@ -17,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up CMake
-        uses: jwlawson/actions-setup-cmake@v1
+        uses: jwlawson/actions-setup-cmake@v2
 
       - name: Install dependencies on Ubuntu
         if: matrix.os == 'ubuntu-latest'
@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies on macOS
         if: matrix.os == 'macos-latest'
         run: |
-          brew install cmake
+          brew install --formula cmake
           brew install googletest
 
       - name: Install dependencies on Windows
