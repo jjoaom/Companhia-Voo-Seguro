@@ -6,7 +6,7 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 ---
 ![Build Status](https://img.shields.io/github/actions/workflow/status/jjoaom/Companhia-Voo-Seguro/cmake-multi-platform.yml?branch=main)
-![Coverage](https://img.shields.io/codecov/c/github/jjoaom/Companhia-Voo-Seguro)
+![Coverage](https://codecov.io/gh/jjoaom/Companhia-Voo-Seguro/branch/main/graph/badge.svg)
 ![License](https://img.shields.io/github/license/jjoaom/Companhia-Voo-Seguro)
 
 ## Sumário
