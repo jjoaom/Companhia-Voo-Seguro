@@ -43,6 +43,8 @@ class Passageiro{
     string getNome() const { return nome; }
     bool ehFiel() const { return fidelidade; }
     int getPontosFidelidade() const { return pontosFidelidade; }
+    void setPontosFidelidade(int newPonto){ pontosFidelidade = newPonto;}
+    void increaseFidelidade(){ pontosFidelidade + 10;}
 
     void visualizar() const {
         cout << "ID: " << id << endl;
