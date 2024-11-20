@@ -48,8 +48,10 @@ jobs:
           # Alternative installation for googletest if not found on Chocolatey
           if (!(choco list --local-only | Select-String -Pattern "googletest")) {
             Write-Host "googletest not found in Chocolatey. Installing manually..."
-            Invoke-WebRequest -Uri "https://github.com/google/googletest/archive/refs/tags/v1.15.2.zip" -OutFile "googletest.zip"
-            Expand-Archive -Path "googletest.zip" -DestinationPath "."
+            Invoke-WebRequest -Uri "https://github.com/google/googletest/archive/refs/heads/main.zip" -OutFile "googletest-main.zip"
+            Expand-Archive -Path "googletest-main.zip" -DestinationPath "."
+            # Renomear a pasta para o nome esperado
+            Rename-Item -Path "googletest-main" -NewName "googletest-release-1.15.2"
             cd "googletest-release-1.15.2"
             cmake -S . -B build
             cmake --build build --target install
