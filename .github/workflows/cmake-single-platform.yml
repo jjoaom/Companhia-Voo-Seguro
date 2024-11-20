@@ -1,0 +1,39 @@
+name: CMake on Windows
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest  # Especifica que o trabalho será executado no Windows
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up CMake
+        uses: jwlawson/actions-setup-cmake@v2
+
+      - name: Install dependencies on Windows
+        run: |
+          # Instala o vcpkg
+          Invoke-WebRequest -Uri https://github.com/microsoft/vcpkg/releases/download/2023.02.14/vcpkg-windows-x64.zip -OutFile vcpkg.zip
+          Expand-Archive -Path vcpkg.zip -DestinationPath vcpkg
+          cd vcpkg
+          ./vcpkg integrate install
+          # Instala o GoogleTest usando vcpkg
+          ./vcpkg install gtest
+
+      - name: Configure CMake
+        run: cmake -B build -S .
+
+      - name: Build project
+        run: cmake --build build
+
+      - name: Run tests
+        run: ctest --test-dir build
