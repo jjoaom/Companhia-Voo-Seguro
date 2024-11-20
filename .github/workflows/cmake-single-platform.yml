@@ -30,8 +30,12 @@ jobs:
           cmake ..
           cmake --build .
 
+          # Definir as variáveis de ambiente para o GoogleTest compilado
+          echo "GTEST_INCLUDE_DIR=$(pwd)/googletest/include" >> $GITHUB_ENV
+          echo "GTEST_MAIN_LIBRARY=$(pwd)/googletest/lib/libgtest.a" >> $GITHUB_ENV
+
       - name: Configure CMake
-        run: cmake -B build -S .
+        run: cmake -B build -S . -DGTEST_INCLUDE_DIR=${{ env.GTEST_INCLUDE_DIR }} -DGTEST_MAIN_LIBRARY=${{ env.GTEST_MAIN_LIBRARY }}
 
       - name: Build project
         run: cmake --build build
