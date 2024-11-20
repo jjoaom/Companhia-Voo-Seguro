@@ -18,7 +18,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     include(FetchContent)
     FetchContent_Declare(
       googletest
-      URL https://github.com/google/googletest/releases/tag/v1.15.2
+      URL https://github.com/google/googletest/archive/refs/tags/v1.15.2.zip
     )
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
