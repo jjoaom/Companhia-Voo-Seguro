@@ -542,6 +542,12 @@ vector<T> lerArqBinario(const string& nomeArquivo){
     arq.close();
     return vetor;
 }
+// Definindo constantes globais para os vetores
+const vector<Passageiro> passageiros = lerArqBinario<Passageiro>("passageiro.bin");
+const vector<Tripulacao> tripulantes = lerArqBinario<Tripulacao>("tripulacao.bin");
+const vector<Voo> voos = lerArqBinario<Voo>("voo.bin");
+const vector<Assento> assentos = lerArqBinario<Assento>("assento.bin");
+const vector<Reserva> reservas = lerArqBinario<Reserva>("reserva.bin");
 
 
 //template para verificar duplicidade de id
@@ -587,7 +593,6 @@ void inicializarArq(const string& nomeArquivo){
 //função para verificar se o ID do voo corresponde 
 template <typename T>
 void verificarIdVoo(T& item){
-    vector<Voo> voos = lerArqBinario<Voo>("voo.bin");
     bool vooEncontrado = false;
     while (!vooEncontrado)
     {
@@ -611,7 +616,6 @@ void verificarIdVoo(T& item){
 }
 //template para verificar se o voo é encontrado em classes como assento e reserva
 void verificarItemsReserva(Reserva& item) {
-    vector<Voo> voos = lerArqBinario<Voo>("voo.bin");
     bool vooEncontrado = false;
 
     while (!vooEncontrado) {
@@ -630,7 +634,6 @@ void verificarItemsReserva(Reserva& item) {
         }
     }
 
-    vector<Assento> assentos = lerArqBinario<Assento>("assento.bin");
     bool assentoEncontrado = false;
 
     while (!assentoEncontrado) {
@@ -649,7 +652,6 @@ void verificarItemsReserva(Reserva& item) {
         }
     }
 
-    vector<Passageiro> passageiros = lerArqBinario<Passageiro>("passageiro.bin");
     bool passageiroEncontrado = false;
 
     while (!passageiroEncontrado) {
@@ -792,22 +794,20 @@ void verificaVooAtivo(Voo& novoVoo) {
 
 void cadastrarVoo() {
     lerContadorArqBinario<Voo>("idVoo.dat");
-
-    vector<Voo> voos = lerArqBinario<Voo>("voo.bin");
+    vector<Voo> voosLoaded = lerArqBinario<Voo>("voo.bin");
     Voo novoVoo;
     novoVoo.cadastrar();
 
-    verificarId(voos, novoVoo);
+    verificarId(voosLoaded, novoVoo);
 
     verificaVooAtivo(novoVoo);
 
-    voos.push_back(novoVoo);
+    voosLoaded.push_back(novoVoo);
 
-    salvarArqBinario(voos, "voo.bin");
+    salvarArqBinario(voosLoaded, "voo.bin");
     salvarContadorArqBinario<Voo>("idVoo.dat");
 
     cout << "Voos registrados" << endl;
-    vector<Voo> voosLoaded = lerArqBinario<Voo>("voo.bin");
     for (const auto& v : voosLoaded) {
         v.visualizar();
     }
@@ -830,7 +830,7 @@ void cadastrarAssentos(){
         cout << "Entrada inválida. Informe um número acima de 0: " << endl;
         cin >> numAssentos;
     }
-    vector<Assento> Assentos = lerArqBinario<Assento>("assento.bin");
+    vector<Assento> assentos = lerArqBinario<Assento>("assento.bin");
     for (int i = 1; i <= numAssentos; i++)
     {
         Assento novoAssento;
@@ -838,9 +838,9 @@ void cadastrarAssentos(){
         verificarIdVoo(novoAssento);
         novoAssento.setAssento(i);
         novoAssento.liberar(); //certifica que todos os assentos cadastrados já estejam liberados
-        Assentos.push_back(novoAssento);
+        assentos.push_back(novoAssento);
     }
-    salvarArqBinario(Assentos, "assento.bin");
+    salvarArqBinario(assentos, "assento.bin");
     vector<Assento> assentosLoaded = lerArqBinario<Assento>("assento.bin");
     for(const auto& a : assentosLoaded){
         cout << "Nº de assentos registrados: " << assentosLoaded.size();
@@ -864,9 +864,9 @@ void reserva()
     novaReserva.cadastrar();
     verificarIdVoo(novaReserva);
     verificarItemsReserva(novaReserva);
-    vector<Reserva> reservas = lerArqBinario<Reserva>("reserva.bin");
-    reservas.push_back(novaReserva);
-    salvarArqBinario(reservas, "reserva.bin");
+    vector<Reserva> reservasLoaded = lerArqBinario<Reserva>("reserva.bin");
+    reservasLoaded.push_back(novaReserva);
+    salvarArqBinario(reservasLoaded, "reserva.bin");
 
     cout << "Reserva registrada" << endl;
     novaReserva.visualizar();
@@ -880,10 +880,10 @@ void reserva()
 exemplo: criar um metodo que vai verificar quantos pontos o passageiro tem na hora de pagar. A cada 10 pontos que ele tiver, a tarifa recebe 15 reais de desconto */
 //essa função vai verificar a reserva digitada para dar baixa de acordo com o assento e caso haja uma reserva vai ser exibido o valor da tarifa
 bool baixaEfetuada(Reserva& novaReserva) {
-    vector<Assento> assentos = lerArqBinario<Assento>("assento.bin");
+    vector<Assento> assentosLoaded = lerArqBinario<Assento>("assento.bin");
     bool assentoEncontrado = false;
 
-    for (auto& a : assentos) {
+    for (auto& a : assentosLoaded) {
         if (novaReserva.getNumAssento() == a.getAssento() && a.isOcupado()) {
             a.liberar();
             assentoEncontrado = true;
@@ -892,7 +892,6 @@ bool baixaEfetuada(Reserva& novaReserva) {
     }
 
     if (assentoEncontrado) {
-        vector<Voo> voos = lerArqBinario<Voo>("voo.bin");
         for (const auto& v : voos) {
             if (novaReserva.getIdVoo() == v.getId()) {
                 cout << "A tarifa total é de R$" << fixed << setprecision(2) << v.getTarifa() << endl;
@@ -972,8 +971,7 @@ Passageiro pesquisaPassageiro()
     int buscaId;
     string buscaNome;
     int tipoPesquisa = menuPesquisa(buscaId, buscaNome);
-    vector<Passageiro> passageirosLidos = lerArqBinario<Passageiro>("passageiro.bin");
-    for (const auto &p : passageirosLidos)
+    for (const auto &p : passageiros)
     {
         if (tipoPesquisa == 1 && p.getId() == buscaId){
             return p;
@@ -989,8 +987,7 @@ Tripulacao pesquisarTripulacao(){
     int buscaId;
     string buscaNome;
     int tipoPesquisa = menuPesquisa(buscaId, buscaNome);
-    vector<Tripulacao> tripulacaoLidos = lerArqBinario<Tripulacao>("tripulacao.bin");
-    for (const auto &t : tripulacaoLidos)
+    for (const auto &t : tripulantes)
     {
         if (tipoPesquisa == 1 && t.getId() == buscaId){
             return t;
