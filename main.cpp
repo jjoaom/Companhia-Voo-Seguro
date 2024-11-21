@@ -11,7 +11,8 @@
 #include <fstream> //bib file
 #include <vector> //bib vector
 #include <limits> //bib limits para limpeza de buffer
-#include <stdexcept>
+#include <functional> //bib para criar funções que recebem trecho de código
+#include <stdexcept> 
 
 
 using namespace std;
@@ -396,6 +397,11 @@ class Assento{
             cout << "O assento " << numAssento << " já está livre." << endl; 
         }
     }
+    void visualizar(){
+        cout << "Nº do assento: " << numAssento << endl;
+        cout << "Nº do voo: " << idVoo << endl;
+        cout << "Assento " << (ocupado ? "Disponível" : "Ocupado") << endl;
+    }
 
     //metodos para salvar e ler nos arq binarios
     void salvar(ofstream& arq) const{
@@ -536,6 +542,7 @@ vector<T> lerArqBinario(const string& nomeArquivo){
     arq.close();
     return vetor;
 }
+
 
 //template para verificar duplicidade de id
 template <typename T>
@@ -869,7 +876,8 @@ void reserva()
 /*6. Baixa em Reserva:
     o Deve liberar o assento e atualizar o status para livre.
     o Calcular o valor total a ser pago, se necessário, de acordo com a tarifa do voo.*/
-//obs: perguntar ao professor se os pontos de fidelidade podem ser usados em algum desconto ex: 10 pontos concedem 2 reais de desconto, ou algo semelhante
+/*obs: perguntar ao professor se os pontos de fidelidade podem ser usados em algum desconto
+exemplo: criar um metodo que vai verificar quantos pontos o passageiro tem na hora de pagar. A cada 10 pontos que ele tiver, a tarifa recebe 15 reais de desconto */
 //essa função vai verificar a reserva digitada para dar baixa de acordo com o assento e caso haja uma reserva vai ser exibido o valor da tarifa
 bool baixaEfetuada(Reserva& novaReserva) {
     vector<Assento> assentos = lerArqBinario<Assento>("assento.bin");
@@ -1046,6 +1054,75 @@ void verificarPontosFidelidade(){
     }
 }
 
+/*Função de depuração de arquivos.
+Essa função serve para exibir o conteúdo de todos os arquivos para fins de teste*/
+/*Teste com novo tipo de função que pode receber trecho de código como parâmetro para LEITURA - por isso o uso do const
+template <typename T>
+void percorrerVetorConst(vector<T>& vetor, function<void(T&)> func){
+    for(const auto& i : item){
+        func(item);
+    }
+}*/
+
+//Teste com novo tipo de função que pode receber trecho de código como parâmetro para MODIFICAÇÃO - sem const
+template <typename T, typename Func>
+void percorrerVetor(vector<T>& vetor, Func func) {
+    for (auto& item : vetor) {
+        func(item);
+    }
+}
+
+void depurarArquivos() {
+    int opcao;
+    vector<Passageiro> passageiros = lerArqBinario<Passageiro>("passageiro.bin");
+    vector<Tripulacao> tripulantes = lerArqBinario<Tripulacao>("tripulacao.bin");
+    vector<Voo> voos = lerArqBinario<Voo>("voo.bin");
+    vector<Assento> assentos = lerArqBinario<Assento>("assento.bin");
+    vector<Reserva> reservas = lerArqBinario<Reserva>("reserva.bin");
+
+    do {
+        cout << "Depuração de arquivos" << endl;
+        cout << "Escolha uma opção:" << endl;
+        cout << "1-Arquivo Passageiro" << endl;
+        cout << "2-Arquivo Tripulacao" << endl;
+        cout << "3-Arquivo Voo" << endl;
+        cout << "4-Arquivo Assento" << endl;
+        cout << "5-Arquivo Reserva" << endl;
+        cout << "6-Sair" << endl;
+        cin >> opcao;
+
+        switch (opcao) {
+        case 1:
+            percorrerVetor(passageiros, [](auto& p) {
+                p.visualizar();
+            });
+            break;
+        case 2:
+            percorrerVetor(tripulantes, [](auto& t) {
+                t.visualizar();
+            });
+            break;
+        case 3:
+            percorrerVetor(voos, [](auto& v) {
+                v.visualizar();
+            });
+            break;
+        case 4:
+            percorrerVetor(assentos, [](auto& a) {
+                a.visualizar();
+            });
+            break;
+        case 5:
+            percorrerVetor(reservas, [](auto& r) {
+                r.visualizar();
+            });
+            break;
+        default:
+            cout << "Valor incorreto. Tente novamente." << endl;
+            break;
+        }
+    } while (opcao != 6);
+}
 
 
 void menu(){
@@ -1062,6 +1139,7 @@ void menu(){
         cout << "7-Pesquisa" << endl;
         cout << "8-Programa Fidelidade" << endl;
         cout << "9-Sair" << endl;
+        cout << "10 - Escolha essa opção para verificar os arquivos binários" << endl;
         cout << "Escolha uma opção: " << endl;
         cin >> opcao;
 
@@ -1094,7 +1172,8 @@ void menu(){
         case 9:
             cout << "Saindo..." << endl;
             break;
-        
+        case 10:
+            depurarArquivos();
         default:
             cout << "Opção inválida!" << endl;
             break;
@@ -1128,9 +1207,9 @@ void checkOs() {
 }
 
 //Inicializando contadores id
-int Passageiro::contadorId;
-int Tripulacao::contadorId;
-int Voo::contadorId;
+int Passageiro::contadorId = 1;
+int Tripulacao::contadorId = 1;
+int Voo::contadorId = 1;
 
 #ifndef RUNNING_TESTS
 int main(){
