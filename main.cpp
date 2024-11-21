@@ -44,7 +44,7 @@ class Passageiro{
     bool ehFiel() const { return fidelidade; }
     int getPontosFidelidade() const { return pontosFidelidade; }
     void setPontosFidelidade(int newPonto){ pontosFidelidade = newPonto;}
-    void increaseFidelidade(){ pontosFidelidade + 10;}
+    void increaseFidelidade(){ pontosFidelidade += 10;}
 
     void visualizar() const {
         cout << "ID: " << id << endl;
@@ -158,12 +158,13 @@ class Tripulacao{
     Cargo getCargo() const {return cargo;}
     int verificaCargo(int cargo) const {
         if(cargo == 1){
-            return '1';
+            return 1;
         }else if( cargo == 2){
-            return '2';
+            return 2;
         }else if(cargo == 3){
-            return '3';
+            return 3;
         }
+        return -1;
     }
 
     void visualizar() const {
@@ -253,6 +254,9 @@ class Voo{
     void setIdComissario(int id) { idComissario = id; }
     bool getStatus() const { return status;}
     void setStatus(bool s) { status = s;}
+    double getTarifa() const { return tarifa;}
+    void setTarifa(double novaTarifa){tarifa = novaTarifa;}
+
 
 
     void visualizar() const {
@@ -281,8 +285,6 @@ class Voo{
         cout << "Informe o destino: " << endl;
         getline(cin, destino);
 
-        cin.ignore();
-
         cout << "Insira o id do avião: " << endl;
         cin >> idAviao;
         cin.ignore();
@@ -299,7 +301,7 @@ class Voo{
         cin >> tarifa;
         while (tarifa <= 0)
         {
-            cout << "Entrada inválida. Informe um valor acima de 0: ";
+            cout << "Entrada inválida. Informe um valor acima de 0: " << endl;
             cin >> tarifa;
         }
         cin.ignore();
@@ -394,6 +396,7 @@ class Assento{
             cout << "O assento " << numAssento << " já está livre." << endl; 
         }
     }
+
     //metodos para salvar e ler nos arq binarios
     void salvar(ofstream& arq) const{
         arq.write(reinterpret_cast<const char*>(&numAssento),sizeof(numAssento));
@@ -424,6 +427,22 @@ class Reserva{
     void setAssento(int assento) { numAssento = assento;}
     int getIdPassageiro() const { return idPassageiro; }
     void setIdPassageiro(int id ) { idPassageiro = id;}
+
+    void cadastrar(){
+        cout << "Insira o número do Voo: " << endl;
+        cin >> idVoo;
+        cout << "Insira o número do assento escolhido: " << endl;
+        cin >> numAssento;
+        cout << "Insira o número do passageiro: " << endl;
+        cin >> idPassageiro;
+    }
+
+    void visualizar(){
+        cout << "Nº do Voo: " << idVoo << endl; 
+        cout << "Nº do assento: " << numAssento << endl; 
+        cout << "Nº do passageiro: " << idPassageiro << endl;
+        cout << "---------------------" << endl;
+    }
 
     //metodos para salvar e ler nos arq binarios
     void salvar(ofstream& arq) const{
@@ -558,6 +577,91 @@ void inicializarArq(const string& nomeArquivo){
     arq.close();
 }
 
+//função para verificar se o ID do voo corresponde 
+template <typename T>
+void verificarIdVoo(T& item){
+    vector<Voo> voos = lerArqBinario<Voo>("voo.bin");
+    bool vooEncontrado = false;
+    while (!vooEncontrado)
+    {
+        for (const auto &v : voos)
+        {
+            if (item.getIdVoo() == v.getId())
+            {
+                cout << "Voo correspondente encontrado. Prosseguindo..." << endl;
+                vooEncontrado = true;
+                break;
+            }
+        }
+        if (!vooEncontrado)
+        {
+            int novoIdVoo;
+            cout << "Este id não corresponde a nenhum voo cadastrado. Insira um novo id: " << endl;
+            cin >> novoIdVoo;
+            item.setIdVoo(novoIdVoo);
+        }
+    }
+}
+//template para verificar se o voo é encontrado em classes como assento e reserva
+void verificarItemsReserva(Reserva& item) {
+    vector<Voo> voos = lerArqBinario<Voo>("voo.bin");
+    bool vooEncontrado = false;
+
+    while (!vooEncontrado) {
+        for (const auto& v : voos) {
+            if (item.getIdVoo() == v.getId()) {
+                cout << "Voo correspondente encontrado. Prosseguindo..." << endl;
+                vooEncontrado = true;
+                break;
+            }
+        }
+        if (!vooEncontrado) {
+            int novoIdVoo;
+            cout << "Este id não corresponde a nenhum voo cadastrado. Insira um novo id: " << endl;
+            cin >> novoIdVoo;
+            item.setIdVoo(novoIdVoo);
+        }
+    }
+
+    vector<Assento> assentos = lerArqBinario<Assento>("assento.bin");
+    bool assentoEncontrado = false;
+
+    while (!assentoEncontrado) {
+        for (const auto& a : assentos) {
+            if (item.getNumAssento() == a.getAssento() && !a.isOcupado()) {
+                cout << "Assento correspondente encontrado. Prosseguindo..." << endl;
+                assentoEncontrado = true;
+                break;
+            }
+        }
+        if (!assentoEncontrado) {
+            int novoAssento;
+            cout << "Este assento não se encontra disponível. Insira um novo id: " << endl;
+            cin >> novoAssento;
+            item.setAssento(novoAssento);
+        }
+    }
+
+    vector<Passageiro> passageiros = lerArqBinario<Passageiro>("passageiro.bin");
+    bool passageiroEncontrado = false;
+
+    while (!passageiroEncontrado) {
+        for (const auto& p : passageiros) {
+            if (item.getIdPassageiro() == p.getId()) {
+                cout << "Passageiro correspondente encontrado. Prosseguindo..." << endl;
+                passageiroEncontrado = true;
+                break;
+            }
+        }
+        if (!passageiroEncontrado) {
+            int novoIdPassageiro;
+            cout << "Este id não corresponde a nenhum passageiro cadastrado. Insira um novo id: " << endl;
+            cin >> novoIdPassageiro;
+            item.setIdPassageiro(novoIdPassageiro);
+        }
+    }
+}
+
 void inicializarArqContador(const string& nomeArquivo){
     ifstream arq(nomeArquivo,ios::binary);
     if (!arq)
@@ -581,6 +685,7 @@ void verificarArquivos(){
     inicializarArq<Tripulacao>("tripulacao.bin");
     inicializarArq<Assento>("assento.bin");
     inicializarArq<Voo>("voo.bin");
+    inicializarArq<Reserva>("reserva.bin");
     //iniciando arquivo dos contadores
     inicializarArqContador("idPassageiro.dat");
     inicializarArqContador("idTripulacao.dat");
@@ -639,6 +744,7 @@ void cadastrarTripulacao(){
     tripulação e o avião.
     o Deve verificar a presença de ao menos um piloto e um copiloto para que o voo
     seja marcado como ativo.*/
+
 
 //função para verificar a presença de ao menos um piloto e um copiloto para marcar o voo como ativo
 void verificaVooAtivo(Voo& novoVoo) {
@@ -704,24 +810,30 @@ void cadastrarVoo() {
 
 /*4. Cadastro de Assento:
     o Deve ser possível cadastrar os assentos de cada voo.*/
+
+
 void cadastrarAssentos(){
     int idVoo, numAssentos;
     cout << "Cadastro de Assento" << endl;
     cout << "Insira o ID do Voo: " << endl;
     cin >> idVoo;
-    //devo inserir uma função para verificar se o id corresponde a algum voo cadastrado no arquivo de voo
     cout << "Insira a quantidade de assentos disponíveis no voo: " << endl;
     cin >> numAssentos;
-    vector<Assento> Assentos;
+    while(numAssentos <= 0){
+        cout << "Entrada inválida. Informe um número acima de 0: " << endl;
+        cin >> numAssentos;
+    }
+    vector<Assento> Assentos = lerArqBinario<Assento>("assento.bin");
     for (int i = 1; i <= numAssentos; i++)
     {
         Assento novoAssento;
         novoAssento.setIdVoo(idVoo);
+        verificarIdVoo(novoAssento);
         novoAssento.setAssento(i);
         novoAssento.liberar(); //certifica que todos os assentos cadastrados já estejam liberados
         Assentos.push_back(novoAssento);
     }
-    salvarArqBinario(Assentos, "assentos.bin");
+    salvarArqBinario(Assentos, "assento.bin");
     vector<Assento> assentosLoaded = lerArqBinario<Assento>("assento.bin");
     for(const auto& a : assentosLoaded){
         cout << "Nº de assentos registrados: " << assentosLoaded.size();
@@ -731,13 +843,94 @@ void cadastrarAssentos(){
 /*5. Reserva:
     o Deve garantir que o assento esteja disponível antes de reservar.
     o Reservas duplicadas para o mesmo assento no mesmo voo devem ser evitadas.*/
+//essa função terá duas funções para verificar se o número do assento está disponível e se o id do passageiro é válido
 
- 
+//possível futura integração: dar a opção para reservar mais de um assento de uma vez
+
+
+
+void reserva()
+{
+    cout << "Cadastrar reserva." << endl;
+    cout << "Inserir reserva que deseja registrar." << endl;
+    Reserva novaReserva;
+    novaReserva.cadastrar();
+    verificarIdVoo(novaReserva);
+    verificarItemsReserva(novaReserva);
+    vector<Reserva> reservas = lerArqBinario<Reserva>("reserva.bin");
+    reservas.push_back(novaReserva);
+    salvarArqBinario(reservas, "reserva.bin");
+
+    cout << "Reserva registrada" << endl;
+    novaReserva.visualizar();
+    cout << "---------------------" << endl;
+}
 
 /*6. Baixa em Reserva:
     o Deve liberar o assento e atualizar o status para livre.
     o Calcular o valor total a ser pago, se necessário, de acordo com a tarifa do voo.*/
+//obs: perguntar ao professor se os pontos de fidelidade podem ser usados em algum desconto ex: 10 pontos concedem 2 reais de desconto, ou algo semelhante
+//essa função vai verificar a reserva digitada para dar baixa de acordo com o assento e caso haja uma reserva vai ser exibido o valor da tarifa
+bool baixaEfetuada(Reserva& novaReserva) {
+    vector<Assento> assentos = lerArqBinario<Assento>("assento.bin");
+    bool assentoEncontrado = false;
 
+    for (auto& a : assentos) {
+        if (novaReserva.getNumAssento() == a.getAssento() && a.isOcupado()) {
+            a.liberar();
+            assentoEncontrado = true;
+            break;
+        }
+    }
+
+    if (assentoEncontrado) {
+        vector<Voo> voos = lerArqBinario<Voo>("voo.bin");
+        for (const auto& v : voos) {
+            if (novaReserva.getIdVoo() == v.getId()) {
+                cout << "A tarifa total é de R$" << fixed << setprecision(2) << v.getTarifa() << endl;
+            }
+        }
+        salvarArqBinario(assentos, "assento.bin");
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void baixarReserva() {
+    cout << "Baixar Reserva." << endl;
+    cout << "Insira a reserva que deseja dar baixa." << endl;
+    Reserva novaReserva;
+    novaReserva.cadastrar();
+    verificarIdVoo(novaReserva);
+
+    if (baixaEfetuada(novaReserva)) {
+        vector<Passageiro> passageiros = lerArqBinario<Passageiro>("passageiro.bin");
+        bool passageiroEncontrado = false;
+
+        while (!passageiroEncontrado) {
+            for (auto& p : passageiros) {
+                if (novaReserva.getIdPassageiro() == p.getId()) {
+                    p.increaseFidelidade();
+                    passageiroEncontrado = true;
+                    break;
+                }
+            }
+            if (!passageiroEncontrado) {
+                int novoIdPassageiro;
+                cout << "Este id não corresponde a nenhum passageiro cadastrado. Insira um novo id: " << endl;
+                cin >> novoIdPassageiro;
+                novaReserva.setIdPassageiro(novoIdPassageiro);
+            }
+        }
+        salvarArqBinario(passageiros, "passageiro.bin");
+    } else {
+        cout << "Reserva não encontrada. Tente novamente." << endl;
+    }
+}
+
+
+//essa função será carregada ao realizar uma reserva, essa função irá comparar o id da reserva com o id do passageiro no vetor de passageiro, se for encontrado a reserva será feita com sucesso e o passageiro recebe 10 pontos de fidelidade SE ele tiver fidelidade ativa
 
 
 /*7. Pesquisa:
@@ -766,8 +959,7 @@ int menuPesquisa(int& buscaId, string& buscaNome){
     }
     return pesquisa;
 }
-
-void pesquisaPassageiro()
+Passageiro pesquisaPassageiro()
 {
     int buscaId;
     string buscaNome;
@@ -775,53 +967,30 @@ void pesquisaPassageiro()
     vector<Passageiro> passageirosLidos = lerArqBinario<Passageiro>("passageiro.bin");
     for (const auto &p : passageirosLidos)
     {
-        if (tipoPesquisa == 1){
-            if (p.getId() == buscaId)
-            {
-                p.visualizar();
-            }else{
-                cout << "Passageiro não encontrado." << endl;
-            }
-            
-        }
-        else if (tipoPesquisa == 2){
-            if (p.getNome() == buscaNome)
-            {
-                p.visualizar();
-            }else{
-                cout << "Passageiro não encontrado." << endl;
-            }
-            
+        if (tipoPesquisa == 1 && p.getId() == buscaId){
+            return p;
+        }else if (tipoPesquisa == 2 && p.getNome() == buscaNome){
+            return p;
         }
     }
+
+    throw runtime_error("Passageiro não encontrado.");
 }
 
-void pesquisarTripulacao(){
+Tripulacao pesquisarTripulacao(){
     int buscaId;
     string buscaNome;
     int tipoPesquisa = menuPesquisa(buscaId, buscaNome);
     vector<Tripulacao> tripulacaoLidos = lerArqBinario<Tripulacao>("tripulacao.bin");
     for (const auto &t : tripulacaoLidos)
     {
-        if (tipoPesquisa == 1){
-            if (t.getId() == buscaId)
-            {
-                t.visualizar();
-            }else{
-                cout << "Tripulação não encontrada." << endl;
-            }
-            
-        }
-        else if (tipoPesquisa == 2){
-            if (t.getNome() == buscaNome)
-            {
-                t.visualizar();
-            }else{
-                cout << "Tripulação não encontrada." << endl;
-            }
-            
+        if (tipoPesquisa == 1 && t.getId() == buscaId){
+            return t;
+        }else if (tipoPesquisa == 2 && t.getNome() == buscaNome){
+            return t;
         }
     }
+    throw runtime_error("Tripulante não encontrado.");
 }
 
 void pesquisa(){
@@ -837,10 +1006,20 @@ void pesquisa(){
         switch (opcao)
         {
         case 1:
-            pesquisaPassageiro();
+            try {
+                Passageiro passageiroEncontrado = pesquisaPassageiro();
+                passageiroEncontrado.visualizar();
+            } catch (const runtime_error& e) {
+                cout << e.what() << endl;
+            }
             break;
         case 2:
-            pesquisarTripulacao();
+            try {
+                Tripulacao tripulacaoEncontrado = pesquisarTripulacao();
+                tripulacaoEncontrado.visualizar();
+            } catch (const runtime_error& e) {
+                cout << e.what() << endl;
+            }
             break;
         case 3:
             cout << "Saindo..." << endl;
@@ -856,6 +1035,17 @@ void pesquisa(){
 /*8. Programa de Fidelidade:
     o Cada voo concede 10 pontos de fidelidade ao passageiro.
     o Um passageiro pode acumular pontos ao longo de múltiplos voos.*/
+void verificarPontosFidelidade(){
+    try {
+        Passageiro passageiroEncontrado = pesquisaPassageiro();
+        if(passageiroEncontrado.ehFiel()){
+            cout << "O passageiro " << passageiroEncontrado.getNome() << " possui " << passageiroEncontrado.getPontosFidelidade() << " pontos." << endl;
+        }
+    } catch (const runtime_error& e) {
+        cout << e.what() << endl;
+    }
+}
+
 
 
 void menu(){
@@ -877,7 +1067,7 @@ void menu(){
 
         switch (opcao)
         {
-        case 1:                                                                                                                                                                                                                                 
+        case 1:                                                                                                    
             cadastrarPassageiro();
             break;
         case 2:
@@ -890,16 +1080,16 @@ void menu(){
             cadastrarAssentos();
             break;
         case 5:
-            /* 5 */
+            reserva();
             break;
         case 6:
-            /* 6 */
+            baixarReserva();
             break;
         case 7:
             pesquisa();
             break;
         case 8:
-            /* 8 */
+            verificarPontosFidelidade();
             break;
         case 9:
             cout << "Saindo..." << endl;
