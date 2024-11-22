@@ -12,7 +12,8 @@
 #include <vector> //bib vector
 #include <limits> //bib limits para limpeza de buffer
 #include <functional> //bib para criar funções que recebem trecho de código
-#include <stdexcept> 
+#include <stdexcept> //bib para tratamento de exceção
+#include <cstdlib> //bib para sistema
 
 
 using namespace std;
@@ -48,13 +49,17 @@ class Passageiro{
     void increaseFidelidade(){ pontosFidelidade += 10;}
 
     void visualizar() const {
-        cout << "ID: " << id << endl;
-        cout << "Nome: " << nome << endl;
-        cout << "Endereço: " << endereco << endl;
-        cout << "Telefone: " << telefone << endl;
-        cout << "Fidelidade: " << (fidelidade ? "Sim" : "Não") << endl;
-        cout << "Pontos de Fidelidade: " << pontosFidelidade << endl;
-        cout << "---------------------" << endl;
+        cout << "|" << endl;
+        cout << "|ID: " << id  << endl;
+        cout << "|Nome: " << nome  << endl;
+        cout << "|Endereço: " << endereco  << endl;
+        cout << "|Telefone: " << telefone  << endl;
+        cout << "|Fidelidade: " << (fidelidade ? "Sim" : "Não")  << endl;
+        if(fidelidade){
+            cout << "|Pontos de Fidelidade: " << pontosFidelidade  << endl;
+        }
+        
+        cout << "|_____________________________|" << endl;
     }
     void cadastrar() {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -169,11 +174,12 @@ class Tripulacao{
     }
 
     void visualizar() const {
+        cout << "|" << endl;
         cout << "ID: " << id << endl;
         cout << "Nome: " << nome << endl;
         cout << "Telefone: " << telefone << endl;
         cout << "Cargo: " << cargoParaString(cargo) << endl;
-        cout << "---------------------" << endl;
+        cout << "|_____________________________|" << endl;
     }
     void cadastrar() {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -261,16 +267,18 @@ class Voo{
 
 
     void visualizar() const {
-        cout << "ID: " << id << endl;
-        cout << "Data: " << data << "-" << "Hora:" << hora << endl;
-        cout << "Origem: " << origem << "-" << "Destino: " << destino << endl;
-        cout << "Avião nº: " << idAviao << endl;
-        cout << "Nº: Piloto" << idPiloto << endl;
-        cout << "Nº: Copiloto" << idCopiloto << endl;
-        cout << "Nº: Comissario" << idComissario << endl;
-        cout << "Ativo: " << (status ? "Ativo" : "Inativo") << endl;
-        cout << "Tarifa: R$" << fixed << setprecision(2) << tarifa << endl;
-        cout << "---------------------" << endl;
+        cout << "|" << endl;
+        cout << "| ID: " << "1"  << endl;
+        cout << "| Data: " << data << " | " << "Hora:" << hora << endl;
+        cout << "| Origem: " << origem <<  endl;
+        cout << "| Destino: " << destino <<  endl;
+        cout << "| Avião nº: " << idAviao <<  endl;
+        cout << "| Nº Piloto: " << idPiloto <<  endl;
+        cout << "| Nº Copiloto: " << idCopiloto <<  endl;
+        cout << "| Nº Comissario: " << idComissario <<  endl;
+        cout << "| Ativo: " << (status ? "Ativo" : "Inativo") <<  endl;
+        cout << "| Tarifa: R$" << fixed << setprecision(2) << tarifa << endl;
+        cout << "|_____________________________|" << endl;
     }
     void cadastrar() {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -398,9 +406,9 @@ class Assento{
         }
     }
     void visualizar(){
-        cout << "Nº do assento: " << numAssento << endl;
-        cout << "Nº do voo: " << idVoo << endl;
-        cout << "Assento " << (ocupado ? "Disponível" : "Ocupado") << endl;
+        cout << "|" << endl;
+        cout << "Nº Voo: " << idVoo << "- Nº Assento: " << numAssento << "- Disponível " << (ocupado ? "Sim" : "Não") << endl;
+        cout << "|_____________________________|" << endl;
     }
 
     //metodos para salvar e ler nos arq binarios
@@ -444,10 +452,11 @@ class Reserva{
     }
 
     void visualizar(){
+        cout << "|" << endl;
         cout << "Nº do Voo: " << idVoo << endl; 
         cout << "Nº do assento: " << numAssento << endl; 
         cout << "Nº do passageiro: " << idPassageiro << endl;
-        cout << "---------------------" << endl;
+        cout << "|_____________________________|" << endl;
     }
 
     //metodos para salvar e ler nos arq binarios
@@ -720,12 +729,12 @@ void cadastrarTemplate(const string& arqContador, const string& arqBinario){
 
     salvarArqBinario(items,arqBinario);
     salvarContadorArqBinario<T>(arqContador);
-    cout << "Items registrados: " << endl;
+    cout << "._____________________________" << endl;
+    cout << "| Items registrados: " << endl;
     vector<T> itemsLoaded = lerArqBinario<T>(arqBinario);
     for(const auto& item : itemsLoaded){
         item.visualizar();
     }
-    cout << "---------------------" << endl;
 }
 
 
@@ -806,12 +815,11 @@ void cadastrarVoo() {
 
     salvarArqBinario(voosLoaded, "voo.bin");
     salvarContadorArqBinario<Voo>("idVoo.dat");
-
-    cout << "Voos registrados" << endl;
+    cout << "._____________________________" << endl;
+    cout << "| Voos registrados" << endl;
     for (const auto& v : voosLoaded) {
         v.visualizar();
     }
-    cout << "---------------------" << endl;
 }
 
 
@@ -842,9 +850,11 @@ void cadastrarAssentos(){
     }
     salvarArqBinario(assentos, "assento.bin");
     vector<Assento> assentosLoaded = lerArqBinario<Assento>("assento.bin");
+    cout << "._____________________________" << endl;
     for(const auto& a : assentosLoaded){
-        cout << "Nº de assentos registrados: " << assentosLoaded.size();
+        cout << "|Nº de assentos registrados: " << assentosLoaded.size();
     }
+    cout << "|_____________________________|" << endl;
 }
 
 /*5. Reserva:
@@ -867,10 +877,9 @@ void reserva()
     vector<Reserva> reservasLoaded = lerArqBinario<Reserva>("reserva.bin");
     reservasLoaded.push_back(novaReserva);
     salvarArqBinario(reservasLoaded, "reserva.bin");
-
-    cout << "Reserva registrada" << endl;
+    cout << "._____________________________" << endl;
+    cout << "|Reserva registrada" << endl;
     novaReserva.visualizar();
-    cout << "---------------------" << endl;
 }
 
 /*6. Baixa em Reserva:
@@ -1090,26 +1099,31 @@ void depurarArquivos() {
 
         switch (opcao) {
         case 1:
+            cout << "._____________________________" << endl;
             percorrerVetor(passageiros, [](auto& p) {
                 p.visualizar();
             });
             break;
         case 2:
+            cout << "._____________________________" << endl;
             percorrerVetor(tripulantes, [](auto& t) {
                 t.visualizar();
             });
             break;
         case 3:
+            cout << "._____________________________" << endl;
             percorrerVetor(voos, [](auto& v) {
                 v.visualizar();
             });
             break;
         case 4:
+            cout << "._____________________________" << endl;
             percorrerVetor(assentos, [](auto& a) {
                 a.visualizar();
             });
             break;
         case 5:
+            cout << "._____________________________" << endl;
             percorrerVetor(reservas, [](auto& r) {
                 r.visualizar();
             });
@@ -1186,7 +1200,7 @@ void checkOs() {
         try {
             SetConsoleOutputCP(CP_UTF8);  // Configura o console para UTF-8
             SetConsoleCP(CP_UTF8);
-
+            system("cls");
             cout << "Localidade configurada para Windows com sucesso.\n";
         } catch (const runtime_error& e) {
             cout << "Falha ao definir a localidade para Windows: " << e.what() << '\n';
@@ -1194,6 +1208,7 @@ void checkOs() {
     #elif __linux__
         try {
             locale::global(locale("pt_BR.UTF-8"));
+            system("clear");
             cout << "Localidade configurada para Linux com sucesso.\n";
         } catch (const runtime_error& e) {
             cout << "Falha ao definir a localidade para Linux: " << e.what() << '\n';
