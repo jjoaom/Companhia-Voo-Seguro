@@ -63,15 +63,14 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
    ```
 
 2. Execute o script de setup:
+   Rode no terminal o comando de chmod para habilitar a permissão de execução do setup
    Para Linux, execute o arquivo `setup.sh`:
    ```bash
      chmod +x setup.sh
     ./setup.sh
    ```
-   
-O script `setup.sh` irá compilar o código automaticamente e gerar o executável `main` na pasta src.
 
-3.Execute o programa:
+2.Execute o programa:
   ```bash
      ./src/main
    ```
