@@ -15,13 +15,7 @@ message(STATUS "CMake versão: ${CMAKE_VERSION}")
 # Add this line to set the runtime library
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-# Inicializa e atualiza o submódulo do GoogleTest
-if(NOT EXISTS "${CMAKE_SOURCE_DIR}/googletest")
-  message(STATUS "GoogleTest submodule not initialized. Initializing...")
-  execute_process(COMMAND git submodule update --init --recursive)
-endif()
-
-# Adiciona o GoogleTest como subdiretório
+# Adiciona o subdiretório do GoogleTest
 add_subdirectory(googletest)
 
 # Adiciona o arquivo de código-fonte principal
