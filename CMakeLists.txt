@@ -17,7 +17,7 @@ if(MSVC)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
-# Adicione o diretório de código-fonte
+# Adiciona o diretório de código-fonte
 add_executable(TP-Voo-Seguro src/main.cpp)
 
 # Configuração específica para GoogleTest
@@ -28,8 +28,21 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(TP-Voo-Seguro GTest::gtest GTest::gtest_main pthread)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     message(STATUS "Compilando para Windows")
+    # Instala o GoogleTest via vcpkg
+    execute_process(
+        COMMAND powershell -Command "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser"
+    )
+    execute_process(
+        COMMAND powershell -Command "Invoke-WebRequest -Uri https://github.com/microsoft/vcpkg/releases/download/2024.06/vcpkg-x64-windows.zip -OutFile vcpkg.zip"
+    )
+    execute_process(
+        COMMAND powershell -Command "Expand-Archive -Path vcpkg.zip -DestinationPath vcpkg"
+    )
+    execute_process(
+        COMMAND powershell -Command "cd vcpkg && .\\vcpkg install gtest"
+    )
     find_package(GTest REQUIRED)
-    target_link_libraries(TP-Voo-Seguro ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+    target_link_libraries(TP-Voo-Seguro GTest::gtest GTest::gtest_main)
 else()
     message(FATAL_ERROR "Sistema operacional não suportado!")
 endif()
