@@ -5,8 +5,6 @@
 Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **Voo Seguro**, desenvolvido em C++ como parte de um trabalho interdisciplinar do curso de Engenharia de Software. Ele visa resolver problemas relacionados à gestão de voos, reservas, tripulação e passageiros, utilizando arquivos binários para persistência de dados e bibliotecas para modularização do software.
 
 ---
-![Build Status](https://img.shields.io/github/actions/workflow/status/jjoaom/Companhia-Voo-Seguro/cmake-multi-platform.yml?branch=main)
-![Coverage](https://codecov.io/gh/jjoaom/Companhia-Voo-Seguro/branch/main/graph/badge.svg)
 ![License](https://img.shields.io/github/license/jjoaom/Companhia-Voo-Seguro)
 
 ## Sumário
