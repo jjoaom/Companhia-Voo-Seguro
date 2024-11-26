@@ -46,6 +46,7 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 4. Compile o programa principal:
    ```bash
+   cd src
    g++ -o main main.cpp 
    ```
 
@@ -63,6 +64,7 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 4. Compile o programa principal:
    ```bash
+   cd src/
    cl /EHsc main.cpp
    ```
 
