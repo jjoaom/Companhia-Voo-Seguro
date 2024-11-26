@@ -1,23 +1,13 @@
 @echo off
+REM Descarta quaisquer alterações locais e força o checkout da branch 'windows'
+git reset --hard
+git checkout windows
+git pull origin windows
 
-REM Verifica se o sistema é Windows
-IF EXIST "%SystemRoot%\System32\bash.exe" (
-    echo Sistema detectado: Linux (WSL)
-    git checkout linux
-) ELSE (
-    echo Sistema detectado: Windows
-    git checkout windows
-    git pull
-)
+REM Compila o código
+cd src
+g++ -o main main.cpp
 
-REM Compilação
-echo Compilando o código...
-g++ -o src\main src\main.cpp
-IF %ERRORLEVEL% EQU 0 (
-    echo Compilação bem-sucedida!
-) ELSE (
-    echo Erro na compilação. Verifique os logs.
-)
-
-echo Fim do script.
-pause
+REM Finaliza com uma mensagem para o usuário
+echo "Compilação concluída!"
+echo "Execute o programa com: src\main.exe"

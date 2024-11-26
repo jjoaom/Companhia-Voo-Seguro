@@ -1,24 +1,14 @@
 #!/bin/bash
 
-# Verifica se o sistema é Linux
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    echo "Sistema detectado: Linux"
+# Descarta quaisquer alterações locais e força o checkout da branch 'linux'
+git reset --hard
+git checkout linux
+git pull origin linux
 
-    # Faz checkout na branch correta
-    git checkout linux
-    git pull
+# Compila o código
+cd src
+g++ -o main main.cpp
 
-    # Compila o código
-    echo "Compilando o código..."
-    g++ -o src/main src/main.cpp
-
-    if [ $? -eq 0 ]; then
-        echo "Compilação bem-sucedida!"
-    else
-        echo "Erro na compilação. Verifique os logs."
-    fi
-else
-    echo "Este script é apenas para sistemas Linux."
-fi
-
-echo "Fim do script."
+# Mensagem de sucesso
+echo "Compilação concluída!"
+echo "Execute o programa com: ./main"
