@@ -49,7 +49,7 @@ jobs:
           git submodule update --init --recursive
 
       - name: Configure CMake
-        run: cmake -B build -S src
+        run: cmake -B build -S .
 
       - name: Build project
         run: cmake --build build
