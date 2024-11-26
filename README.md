@@ -38,42 +38,21 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 ### Instruções para Windows
 
-#### Opção 1: Usando MinGW
-
 1. Baixe e instale o MinGW pelo site oficial [MinGW-w64](https://www.mingw-w64.org/).
+   
+   Ou, se preferir usar o MSVC, instale o Microsoft Build Tools ou o Visual Studio, garantindo que o componente de desenvolvimento em C++ esteja selecionado.
 
-2. Abra o terminal ou o Prompt de Comando no diretório do projeto.
+2. Execute o script de setup:
+   Para Windows, execute o arquivo `setup.bat`:
 
-4. Compile o programa principal:
    ```bash
-   cd src
-   g++ -o main main.cpp 
+   setup.bat
    ```
 
-5. Execute o programa:
+3. Execute o programa:
    ```bash
-   main.exe
+   src/main.exe
    ```
-#### Opção 2: Usando MSVC
-
-1. Instale o Microsoft Build Tools ou o Visual Studio, garantindo que o componente de desenvolvimento em C++ esteja selecionado.
-
-2. Abra o **Developer Command Prompt** do Visual Studio.
-
-3. Navegue até a pasta do projeto.
-
-4. Compile o programa principal:
-   ```bash
-   cd src/
-   cl /EHsc main.cpp
-   ```
-
-5. Execute o programa:
-   ```bash
-   main.exe
-   ```
-
----
 
 ### Instruções para Linux
 
@@ -83,16 +62,18 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
    sudo apt install g++
    ```
 
-2. Navegue até a pasta do projeto pelo terminal.
-
-3. Compile o programa principal:
+2. Execute o script de setup:
+   Para Linux, execute o arquivo `setup.sh`:
    ```bash
-   g++ -o sistema main.cpp -std=c++17
+     chmod +x setup.sh
+    ./setup.sh
    ```
+   
+O script `setup.sh` irá compilar o código automaticamente e gerar o executável `main` na pasta src.
 
-4. Execute o programa:
-   ```bash
-   ./sistema
+3.Execute o programa:
+  ```bash
+     ./src/main
    ```
 
 ---
