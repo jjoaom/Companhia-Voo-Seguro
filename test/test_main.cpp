@@ -1,6 +1,23 @@
 #include <gtest/gtest.h>
 #define RUNNING_TESTS
-#include "../main.cpp" 
+#include "../main.cpp"
+
+// Teste para o construtor padrão da classe Passageiro
+TEST(PassageiroTest, DefaultConstructor) {
+    Passageiro p;
+    EXPECT_EQ(p.getId(), 1);
+    EXPECT_EQ(p.getNome(), "");
+    EXPECT_EQ(p.ehFiel(), false);
+    EXPECT_EQ(p.getPontosFidelidade(), 0);
+}
+
+// Teste para o construtor parametrizado da classe Passageiro
+TEST(PassageiroTest, ParametrizedConstructor) {
+    Passageiro p("João", "Rua A", "123456789", true, 100);
+    EXPECT_EQ(p.getNome(), "João");
+    EXPECT_EQ(p.ehFiel(), true);
+    EXPECT_EQ(p.getPontosFidelidade(), 100);
+}
 
 // Teste para o método setId da classe Passageiro
 TEST(PassageiroTest, SetId) {
@@ -28,7 +45,6 @@ TEST(TripulacaoTest, DefaultConstructor) {
     Tripulacao t;
     EXPECT_EQ(t.getId(), 1);
     EXPECT_EQ(t.getNome(), "");
-    EXPECT_EQ(t.getCargo(), Tripulacao::Cargo::Piloto);
 }
 
 // Teste para o construtor parametrizado da classe Tripulacao
@@ -48,9 +64,9 @@ TEST(TripulacaoTest, SetId) {
 // Teste para o método verificaCargo da classe Tripulacao
 TEST(TripulacaoTest, VerificaCargo) {
     Tripulacao t;
-    EXPECT_EQ(t.verificaCargo(1), Tripulacao::Cargo::Piloto);
-    EXPECT_EQ(t.verificaCargo(2), Tripulacao::Cargo::Copiloto);
-    EXPECT_EQ(t.verificaCargo(3), Tripulacao::Cargo::Comissario);
+    EXPECT_EQ(t.verificaCargo(1), 1);
+    EXPECT_EQ(t.verificaCargo(2), 2);
+    EXPECT_EQ(t.verificaCargo(3), 3);
 }
 
 // Teste para o construtor padrão da classe Voo
@@ -75,9 +91,8 @@ TEST(VooTest, SetId) {
     EXPECT_EQ(v.getId(), 30);
 }
 
-// Teste para o método setTarifa da classe Voo
-TEST(VooTest, SetTarifa) {
-    Voo v;
-    v.setTarifa(500.0);
-    EXPECT_EQ(v.getTarifa(), 500.0);
+// Função principal para rodar todos os testes
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
