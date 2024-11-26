@@ -108,7 +108,8 @@ Se preferir compilar manualmente, sem depender dos scripts, siga os passos abaix
 
 3. Execute o programa:
    ```bash
-   ./src/main
+   cd src/
+   ./main
    ```
 
 ---
