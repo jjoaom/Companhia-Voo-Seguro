@@ -1,42 +1,42 @@
-name: CMake on Ubuntu and Windows
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          submodules: true  # Garante que os submódulos sejam inicializados e atualizados
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
-
-      - name: Install dependencies on Ubuntu
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential cmake libgtest-dev
-          cd /usr/src/googletest/googletest
-          sudo cmake CMakeLists.txt
-          sudo make
-          sudo cp lib/*.a /usr/lib
 
       - name: Install dependencies on Windows
         if: matrix.os == 'windows-latest'
         run: |
           choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y
-          choco install googletest -y
+          choco install git -y
+          # Garantir que o submódulo do GoogleTest esteja atualizado
+          git submodule update --init --recursive
+          
+      - name: Install dependencies on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libgtest-dev
+          # Garantir que o submódulo do GoogleTest esteja atualizado
+          git submodule update --init --recursive
+
+      - name: Install dependencies on macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install cmake
+          brew install googletest
+          # Garantir que o submódulo do GoogleTest esteja atualizado
+          git submodule update --init --recursive
 
       - name: Configure CMake
         run: cmake -B build -S .
