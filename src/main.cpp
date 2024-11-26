@@ -561,10 +561,10 @@ void verificarPontosFidelidade()
     }
 }
 
-
-void pesquisaAssento(){
+void pesquisaAssento()
+{
     int opcao, idBuscado;
-    vector<Assento>assentos = lerArqBinario<Assento>("data/assento.bin");
+    vector<Assento> assentos = lerArqBinario<Assento>("data/assento.bin");
     do
     {
         cout << "Pesquisa de assentos" << endl;
@@ -577,29 +577,35 @@ void pesquisaAssento(){
         switch (opcao)
         {
         case 1:
-            percorrerVetor(assentos, [](auto &a)
-                           { if (!a.isOcupado())
-                               {
-                                   a.visualizar();
-                               } });
+            for (auto &a : assentos)
+            {
+                if (!a.isOcupado())
+                {
+                    a.visualizar();
+                }
+            }
+
             break;
         case 2:
-            percorrerVetor(assentos, [](auto &a)
-                           {
-                               if (a.isOcupado())
-                               {
-                                   a.visualizar();
-                               }
-                           });
+            for (auto &a : assentos)
+            {
+                if (a.isOcupado())
+                {
+                    a.visualizar();
+                }
+            }
             break;
         case 3:
-            percorrerVetor(assentos, [](auto &a)
-                           { a.visualizar(); });
+            for (auto &a : assentos)
+            {
+                a.visualizar();
+            }
+
             break;
         case 4:
             cout << "Saindo..." << endl;
             break;
-        
+
         default:
             break;
         }
@@ -630,25 +636,30 @@ void depurarArquivos()
         switch (opcao)
         {
         case 1:
-            percorrerVetor(passageiros, [](auto &p)
-                           { p.visualizar(); });
+            for (auto &p : passageiros){
+                p.visualizar();
+            }
             break;
         case 2:
-            percorrerVetor(tripulantes, [](auto &t)
-                           { t.visualizar(); });
+            for (auto &t : tripulantes){
+                t.visualizar();
+            }
             break;
         case 3:
-            percorrerVetor(voos, [](auto &v)
-                           { v.visualizar(); });
+            for (auto &v : voos){
+                v.visualizar();
+            }
             break;
         case 4:
             pesquisaAssento();
-            percorrerVetor(assentos, [](auto &a)
-                           { a.visualizar(); });
+            for (auto &a : assentos){
+                a.visualizar();
+            }
             break;
         case 5:
-            percorrerVetor(reservas, [](auto &r)
-                           { r.visualizar(); });
+            for (auto &r : reservas){
+                r.visualizar();
+            }
             break;
         case 6:
             cout << "Saindo..." << endl;

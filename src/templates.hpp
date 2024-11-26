@@ -136,16 +136,6 @@ void cadastrarTemplate(const string &arqBinario)
     }
 }
 
-// Teste com novo tipo de função que pode receber trecho de código como parâmetro para MODIFICAÇÃO - sem const
-template <typename T, typename Func>
-void  percorrerVetor(vector<T> &vetor, Func func)
-{
-    for (auto &item : vetor)
-    {
-        func(item);
-    }
-}
-
 
 //converter nome para minusculo para realizar busca
 
