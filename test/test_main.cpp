@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #define RUNNING_TESTS
-#include "../main.cpp"
+#include "../src/classes.hpp"
+#include "../src/templates.hpp"
+#include "../src/main.cpp"
 
 // Teste para o construtor padrão da classe Passageiro
 TEST(PassageiroTest, DefaultConstructor) {
