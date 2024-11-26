@@ -1,4 +1,4 @@
-name: CMake on Windows
+name: CMake on Ubuntu
 
 on:
   push:
@@ -10,38 +10,26 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up CMake
-        uses: lukka/get-cmake@latest
+        uses: jwlawson/actions-setup-cmake@v2
 
-      - name: Cache GoogleTest
-        uses: actions/cache@v3
-        with:
-          path: googletest
-          key: ${{ runner.os }}-googletest
-          restore-keys: |
-            ${{ runner.os }}-googletest
-
-      - name: Install GoogleTest
-        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install dependencies on Ubuntu
         run: |
-          git clone https://github.com/google/googletest.git
-          cd googletest
-          git submodule update --init --recursive
-          mkdir build
-          cd build
-          cmake ..
-          cmake --build .
-          echo "GTEST_INCLUDE_DIR=$(pwd)/include" >> $GITHUB_ENV
-          echo "GTEST_MAIN_LIBRARY=$(pwd)/lib/libgtest.lib" >> $GITHUB_ENV
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libgtest-dev
+          cd /usr/src/googletest/googletest
+          sudo cmake CMakeLists.txt
+          sudo make
+          sudo cp lib/*.a /usr/lib
 
       - name: Configure CMake
-        run: cmake -B build -S . -DGTEST_INCLUDE_DIR=${{ env.GTEST_INCLUDE_DIR }} -DGTEST_MAIN_LIBRARY=${{ env.GTEST_MAIN_LIBRARY }}
+        run: cmake -B build -S .
 
       - name: Build project
         run: cmake --build build
@@ -49,5 +37,7 @@ jobs:
       - name: Run tests
         run: ctest --test-dir build
 
-      - name: Linker settings to avoid conflicts
-        run: cmake -B build -S . -DCMAKE_EXE_LINKER_FLAGS="/NODEFAULTLIB:libcpmtd.lib"
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
