@@ -31,11 +31,11 @@ void recarregarVetoresGlobais()
 {
     try
     {
-        passageiros = lerArqBinario<Passageiro>("data/passageiro.bin");
-        tripulantes = lerArqBinario<Tripulacao>("data/tripulacao.bin");
-        voos = lerArqBinario<Voo>("data/voo.bin");
-        assentos = lerArqBinario<Assento>("data/assento.bin");
-        reservas = lerArqBinario<Reserva>("data/reserva.bin");
+        passageiros = lerArqBinario<Passageiro>("./data/passageiro.bin");
+        tripulantes = lerArqBinario<Tripulacao>("./data/tripulacao.bin");
+        voos = lerArqBinario<Voo>("./data/voo.bin");
+        assentos = lerArqBinario<Assento>("./data/assento.bin");
+        reservas = lerArqBinario<Reserva>("./data/reserva.bin");
     }
     catch (const runtime_error &e)
     {
@@ -48,7 +48,7 @@ void recarregarVetoresGlobais()
 void cadastrarPassageiro()
 {
     try{
-    cadastrarTemplate<Passageiro>("data/passageiro.bin");
+    cadastrarTemplate<Passageiro>("./data/passageiro.bin");
     }catch (const runtime_error &e){
         cerr << "Erro ao cadastrar passageiro: " << e.what() << endl;
     }
@@ -58,7 +58,7 @@ void cadastrarPassageiro()
 void cadastrarTripulacao()
 {
     try{
-    cadastrarTemplate<Tripulacao>("data/tripulacao.bin");
+    cadastrarTemplate<Tripulacao>("./data/tripulacao.bin");
     }catch (const runtime_error &e){
         cerr << "Erro ao cadastrar tripulação: " << e.what() << endl;
     }
@@ -69,7 +69,7 @@ void cadastrarTripulacao()
 // função para verificar a presença de ao menos um piloto e um copiloto para marcar o voo como ativo
 void verificaVooAtivo(Voo &novoVoo)
 {
-    vector<Tripulacao> tripulacaoLoaded = lerArqBinario<Tripulacao>("data/tripulacao.bin");
+    vector<Tripulacao> tripulacaoLoaded = lerArqBinario<Tripulacao>("./data/tripulacao.bin");
 
     bool pilotoEncontrado = false;
     bool copilotoEncontrado = false;
@@ -135,7 +135,7 @@ void cadastrarVoo()
     try
     {
         recarregarVetoresGlobais();
-        vector<Voo> voosLoaded = lerArqBinario<Voo>("data/voo.bin");
+        vector<Voo> voosLoaded = lerArqBinario<Voo>("./data/voo.bin");
         Voo novoVoo;
 
         // Incrementar o ID e atribuir ao novo voo
@@ -151,7 +151,7 @@ void cadastrarVoo()
 
         voosLoaded.push_back(novoVoo);
 
-        salvarArqBinario(voosLoaded, "data/voo.bin");
+        salvarArqBinario(voosLoaded, "./data/voo.bin");
         recarregarVetoresGlobais();
 
         cout << "| Voos registrados" << endl;
@@ -183,7 +183,7 @@ void cadastrarAssentos()
             cout << "Entrada inválida. Informe um número acima de 0: " << endl;
             cin >> numAssentos;
         }
-        vector<Assento> assentos = lerArqBinario<Assento>("data/assento.bin");
+        vector<Assento> assentos = lerArqBinario<Assento>("./data/assento.bin");
         for (int i = 1; i <= numAssentos; i++)
         {
             Assento novoAssento;
@@ -197,7 +197,7 @@ void cadastrarAssentos()
             novoAssento.liberado();
             assentos.push_back(novoAssento);
         }
-        salvarArqBinario(assentos, "data/assento.bin");
+        salvarArqBinario(assentos, "./data/assento.bin");
         recarregarVetoresGlobais();
         cout << "Todos os " << numAssentos << " assentos do Voo nº " << idVoo << " foram cadastrados com sucesso." << endl;
     }
@@ -255,7 +255,7 @@ bool verificarItemsReserva(Reserva &item)
 
     // Verifica se o assento está disponível
     bool assentoEncontrado = false;
-    vector<Assento> assentosLoaded = lerArqBinario<Assento>("data/assento.bin");
+    vector<Assento> assentosLoaded = lerArqBinario<Assento>("./data/assento.bin");
     for (auto &a : assentosLoaded)
     {
         if (item.getNumAssento() == a.getAssento() && !a.isOcupado())
@@ -271,7 +271,7 @@ bool verificarItemsReserva(Reserva &item)
         cerr << "Este assento não se encontra disponível." << endl;
         return false;
     }
-    salvarArqBinario(assentosLoaded, "data/assento.bin");
+    salvarArqBinario(assentosLoaded, "./data/assento.bin");
 
     return true;
 }
@@ -310,10 +310,10 @@ void reserva()
                 return;
             }
 
-            vector<Reserva> reservasLoaded = lerArqBinario<Reserva>("data/reserva.bin");
+            vector<Reserva> reservasLoaded = lerArqBinario<Reserva>("./data/reserva.bin");
             reservasLoaded.push_back(novaReserva);
 
-            salvarArqBinario(reservasLoaded, "data/reserva.bin");
+            salvarArqBinario(reservasLoaded, "./data/reserva.bin");
             recarregarVetoresGlobais();
             cout << "|Reserva registrada" << endl;
             novaReserva.visualizar();
@@ -345,7 +345,7 @@ bool baixaEfetuada(Reserva &novaReserva)
     }
 
     // verifica se o assento está ocupado
-    vector<Assento> assentosLoaded = lerArqBinario<Assento>("data/assento.bin");
+    vector<Assento> assentosLoaded = lerArqBinario<Assento>("./data/assento.bin");
     bool assentoEncontrado = false;
     for (auto &a : assentosLoaded)
     {
@@ -378,7 +378,7 @@ bool baixaEfetuada(Reserva &novaReserva)
         return false;
     }
 
-    salvarArqBinario(assentosLoaded, "data/assento.bin");
+    salvarArqBinario(assentosLoaded, "./data/assento.bin");
 
     for (const auto &v : voos)
     {
@@ -407,7 +407,7 @@ void baixarReserva()
             return;
         }
 
-        vector<Reserva> reservasLoaded = lerArqBinario<Reserva>("data/reserva.bin");
+        vector<Reserva> reservasLoaded = lerArqBinario<Reserva>("./data/reserva.bin");
 
         auto reservaRemovida = remove_if(reservasLoaded.begin(), reservasLoaded.end(), [&novaReserva](const Reserva &r) {
             return r.getIdPassageiro() == novaReserva.getIdPassageiro() && r.getIdVoo() == novaReserva.getIdVoo() && r.getNumAssento() == novaReserva.getNumAssento();
@@ -421,9 +421,9 @@ void baixarReserva()
 
         reservasLoaded.erase(reservaRemovida, reservasLoaded.end());
 
-        salvarArqBinario(reservasLoaded, "data/reserva.bin");
+        salvarArqBinario(reservasLoaded, "./data/reserva.bin");
 
-        vector<Passageiro> passageirosLoaded = lerArqBinario<Passageiro>("data/passageiro.bin");
+        vector<Passageiro> passageirosLoaded = lerArqBinario<Passageiro>("./data/passageiro.bin");
         bool passageiroEncontrado = false;
         for (auto &p : passageirosLoaded)
         {
@@ -440,7 +440,7 @@ void baixarReserva()
             return;
         }
 
-        salvarArqBinario(passageirosLoaded, "data/passageiro.bin");
+        salvarArqBinario(passageirosLoaded, "./data/passageiro.bin");
         recarregarVetoresGlobais();
         cout << "Reserva baixada com sucesso." << endl;
     }
@@ -589,7 +589,7 @@ void verificarPontosFidelidade()
 void pesquisaAssento()
 {
     int opcao, idBuscado;
-    vector<Assento> assentos = lerArqBinario<Assento>("data/assento.bin");
+    vector<Assento> assentos = lerArqBinario<Assento>("./data/assento.bin");
     do
     {
         cout << "Pesquisa de assentos" << endl;
@@ -636,11 +636,11 @@ void depurarArquivos()
 {
     try
     {
-        vector<Passageiro>passageiros = lerArqBinario<Passageiro>("data/passageiro.bin");
-        vector<Tripulacao>tripulantes = lerArqBinario<Tripulacao>("data/tripulacao.bin");
-        vector<Voo>voos = lerArqBinario<Voo>("data/voo.bin");
-        vector<Reserva>reservas = lerArqBinario<Reserva>("data/reserva.bin");
-        vector<Assento>assentos = lerArqBinario<Assento>("data/assento.bin");
+        vector<Passageiro>passageiros = lerArqBinario<Passageiro>("./data/passageiro.bin");
+        vector<Tripulacao>tripulantes = lerArqBinario<Tripulacao>("./data/tripulacao.bin");
+        vector<Voo>voos = lerArqBinario<Voo>("./data/voo.bin");
+        vector<Reserva>reservas = lerArqBinario<Reserva>("./data/reserva.bin");
+        vector<Assento>assentos = lerArqBinario<Assento>("./data/assento.bin");
         int opcao;
         do
         {
@@ -798,20 +798,20 @@ void menu()
 void verificarArquivos()
 {
     // Iniciando arquivos dos vetores
-    inicializarArq<Passageiro>("data/passageiro.bin");
-    inicializarArq<Tripulacao>("data/tripulacao.bin");
-    inicializarArq<Assento>("data/assento.bin");
-    inicializarArq<Voo>("data/voo.bin");
-    inicializarArq<Reserva>("data/reserva.bin");
+    inicializarArq<Passageiro>("./data/passageiro.bin");
+    inicializarArq<Tripulacao>("./data/tripulacao.bin");
+    inicializarArq<Assento>("./data/assento.bin");
+    inicializarArq<Voo>("./data/voo.bin");
+    inicializarArq<Reserva>("./data/reserva.bin");
 
     // Lendo os dados para atualizar o contador
-    vector<Passageiro> passageirosLoaded = lerArqBinario<Passageiro>("data/passageiro.bin");
+    vector<Passageiro> passageirosLoaded = lerArqBinario<Passageiro>("./data/passageiro.bin");
     atualizarContadorId(passageirosLoaded);
 
-    vector<Tripulacao> tripulantesLoaded = lerArqBinario<Tripulacao>("data/tripulacao.bin");
+    vector<Tripulacao> tripulantesLoaded = lerArqBinario<Tripulacao>("./data/tripulacao.bin");
     atualizarContadorId(tripulantesLoaded);
 
-    vector<Voo> voosLoaded = lerArqBinario<Voo>("data/voo.bin");
+    vector<Voo> voosLoaded = lerArqBinario<Voo>("./data/voo.bin");
     atualizarContadorId(voosLoaded);
 }
 
