@@ -5,7 +5,6 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include <functional>
 #include <limits>
 #include <algorithm> 
 #include <cctype> 
@@ -114,31 +113,34 @@ void inicializarArq(const string &nomeArquivo)
     }
     arq.close();
 }
-
-
-
 // Template para funções de cadastro
 template <typename T>
 void cadastrarTemplate(const string &arqBinario)
 {
-    vector<T> items = lerArqBinario<T>(arqBinario);
-    T novoItem;
-    novoItem.cadastrar();
-    verificarId(items, novoItem);
-    items.push_back(novoItem);
-    salvarArqBinario(items, arqBinario);
-    cout << "._____________________________" << endl;
-    cout << "| Items registrados: " << endl;
-    vector<T> itemsLoaded = lerArqBinario<T>(arqBinario);
-    for (const auto &item : itemsLoaded)
+    try
     {
-        item.visualizar();
+        vector<T> items = lerArqBinario<T>(arqBinario);
+        T novoItem;
+        novoItem.cadastrar();
+        verificarId(items, novoItem);
+        items.push_back(novoItem);
+        salvarArqBinario(items, arqBinario);
+        cout << "._____________________________" << endl;
+        cout << "| Items registrados: " << endl;
+        vector<T> itemsLoaded = lerArqBinario<T>(arqBinario);
+        for (const auto &item : itemsLoaded)
+        {
+            item.visualizar();
+        }
+    }
+    catch (const runtime_error &e)
+    {
+        cerr << "Erro ao cadastrar item: " << e.what() << endl;
     }
 }
 
 
 //converter nome para minusculo para realizar busca
-
 string toLowerCase(const string& str) {
     string minusculo = str;
     std::transform(minusculo.begin(), minusculo.end(), minusculo.begin(), [](unsigned char c) { 
@@ -146,4 +148,35 @@ string toLowerCase(const string& str) {
     });
     return minusculo;
 }
+
+//verificar Sistema Operacional
+void checkOs()
+{
+#ifdef _WIN32
+    try
+    {
+        SetConsoleOutputCP(CP_UTF8); // Configura o console para UTF-8
+        SetConsoleCP(CP_UTF8);
+        system("cls");
+        cout << "Localidade configurada para Windows com sucesso.\n";
+    }
+    catch (const runtime_error &e)
+    {
+        cout << "Falha ao definir a localidade para Windows: " << e.what() << '\n';
+    }
+#elif __linux__
+    try
+    {
+        system("clear");
+        cout << "Localidade configurada para Linux com sucesso.\n";
+    }
+    catch (const runtime_error &e)
+    {
+        cout << "Falha ao definir a localidade para Linux: " << e.what() << '\n';
+    }
+#endif
+}
+
+
+
 #endif // TEMPLATES_HPP
