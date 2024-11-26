@@ -1,13 +1,7 @@
 @echo off
-REM Descarta quaisquer alterações locais e força o checkout da branch 'windows'
+REM Muda para a branch 'windows' e garante que o repositório esteja atualizado
 git reset --hard
 git checkout windows
 git pull origin windows
 
-REM Compila o código
-cd src
-g++ -o main main.cpp
-
-REM Finaliza com uma mensagem para o usuário
-echo "Compilação concluída!"
-echo "Execute o programa com: src\main.exe"
+echo "Branch windows atualizada com sucesso!"

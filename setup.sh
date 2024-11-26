@@ -5,10 +5,4 @@ git reset --hard
 git checkout linux
 git pull origin linux
 
-# Compila o código
-cd src
-g++ -o main main.cpp
-
-# Mensagem de sucesso
-echo "Compilação concluída!"
-echo "Execute o programa com: ./main"
+echo "Branch linux atualizada com sucesso!"
