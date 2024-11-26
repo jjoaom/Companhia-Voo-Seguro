@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          submodules: true  # Garantir que os submódulos sejam inicializados e atualizados
 
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
@@ -23,21 +25,18 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake libgtest-dev
-          cd /usr/src/googletest/googletest
-          sudo cmake CMakeLists.txt
-          sudo make
-          sudo cp lib/*.a /usr/lib
+          # Não é mais necessário fazer o cmake manual do googletest, pois ele já é submódulo
 
       - name: Configure CMake
-        run: cmake -B build -S .
+        run: cmake -B build -S .  # Usa o diretório raiz do repositório para a configuração
 
       - name: Build project
-        run: cmake --build build
+        run: cmake --build build  # Construa o projeto após a configuração
 
       - name: Run tests
-        run: ctest --test-dir build
+        run: ctest --test-dir build  # Execute os testes após a construção
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}  # Substitua pelo seu token do Codecov

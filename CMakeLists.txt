@@ -15,17 +15,17 @@ message(STATUS "CMake versão: ${CMAKE_VERSION}")
 # Add this line to set the runtime library
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-# Adiciona o subdiretório do GoogleTest
+# Adiciona o subdiretório do GoogleTest (como submódulo)
 add_subdirectory(googletest)
 
-# Adiciona o arquivo de código-fonte principal
-add_executable(TP-Voo-Seguro main.cpp)
+# Adiciona o arquivo de código-fonte principal (src/main.cpp)
+add_executable(TP-Voo-Seguro src/main.cpp)
 
-# Linka o GoogleTest
+# Linka o GoogleTest para o projeto
 target_link_libraries(TP-Voo-Seguro gtest gtest_main)
 
 # Configura o link do GoogleTest para todos os sistemas
 enable_testing()
 
-# Adiciona o subdiretório de testes
+# Adiciona o subdiretório de testes (test)
 add_subdirectory(test)
