@@ -6,6 +6,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
     # Faz checkout na branch correta
     git checkout linux
+    git pull
 
     # Compila o código
     echo "Compilando o código..."

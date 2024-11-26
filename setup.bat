@@ -7,6 +7,7 @@ IF EXIST "%SystemRoot%\System32\bash.exe" (
 ) ELSE (
     echo Sistema detectado: Windows
     git checkout windows
+    git pull
 )
 
 REM Compilação
