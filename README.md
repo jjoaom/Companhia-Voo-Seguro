@@ -62,6 +62,7 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 2. Execute o script de setup:
    Rode no terminal o comando de `chmod` para habilitar a permissão de execução do setup:
    ```bash
+   cd Companhia-Voo-Seguro/
    chmod +x linux.sh
    ./linux.sh
    ```
@@ -74,7 +75,8 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 3. Execute o programa:
    ```bash
-   ./src/main
+   cd src
+   ./main
    ```
 
 ### Compilação Manual (Opcional)
