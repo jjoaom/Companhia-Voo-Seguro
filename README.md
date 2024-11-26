@@ -5,8 +5,6 @@
 Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **Voo Seguro**, desenvolvido em C++ como parte de um trabalho interdisciplinar do curso de Engenharia de Software. Ele visa resolver problemas relacionados à gestão de voos, reservas, tripulação e passageiros, utilizando arquivos binários para persistência de dados e bibliotecas para modularização do software.
 
 ---
-![Build Status](https://img.shields.io/github/actions/workflow/status/jjoaom/Companhia-Voo-Seguro/cmake-multi-platform.yml?branch=main)
-![Coverage](https://codecov.io/gh/jjoaom/Companhia-Voo-Seguro/branch/main/graph/badge.svg)
 ![License](https://img.shields.io/github/license/jjoaom/Companhia-Voo-Seguro)
 
 ## Sumário
@@ -38,40 +36,20 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 ### Instruções para Windows
 
-#### Opção 1: Usando MinGW
-
 1. Baixe e instale o MinGW pelo site oficial [MinGW-w64](https://www.mingw-w64.org/).
+   
+   Ou, se preferir usar o MSVC, instale o Microsoft Build Tools ou o Visual Studio, garantindo que o componente de desenvolvimento em C++ esteja selecionado.
 
-2. Abra o terminal ou o Prompt de Comando no diretório do projeto.
-
-4. Compile o programa principal:
+2. Execute o script de setup:
+   Para Windows, execute o arquivo `setup.bat`:
    ```bash
-   g++ -o main main.cpp 
+   setup.bat
    ```
 
-5. Execute o programa:
+3. Execute o programa:
    ```bash
-   main.exe
+   src/main.exe
    ```
-#### Opção 2: Usando MSVC
-
-1. Instale o Microsoft Build Tools ou o Visual Studio, garantindo que o componente de desenvolvimento em C++ esteja selecionado.
-
-2. Abra o **Developer Command Prompt** do Visual Studio.
-
-3. Navegue até a pasta do projeto.
-
-4. Compile o programa principal:
-   ```bash
-   cl /EHsc main.cpp
-   ```
-
-5. Execute o programa:
-   ```bash
-   main.exe
-   ```
-
----
 
 ### Instruções para Linux
 
@@ -81,16 +59,54 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
    sudo apt install g++
    ```
 
-2. Navegue até a pasta do projeto pelo terminal.
-
-3. Compile o programa principal:
+2. Execute o script de setup:
+   Rode no terminal o comando de `chmod` para habilitar a permissão de execução do setup:
    ```bash
-   g++ -o sistema main.cpp -std=c++17
+   chmod +x linux.sh
+   ./linux.sh
    ```
 
-4. Execute o programa:
+   Agora, execute o arquivo `setup.sh`:
    ```bash
-   ./sistema
+   chmod +x setup.sh
+   ./setup.sh
+   ```
+
+3. Execute o programa:
+   ```bash
+   ./src/main
+   ```
+
+### Compilação Manual (Opcional)
+
+Se preferir compilar manualmente, sem depender dos scripts, siga os passos abaixo:
+
+#### Windows
+
+1. Abra o terminal (Prompt de Comando ou PowerShell) e navegue até o diretório raiz do projeto.
+2. Para compilar o código, execute o seguinte comando (supondo que o MinGW esteja corretamente instalado):
+   ```bash
+   g++ -o src/main src/main.cpp
+   ```
+   Isso irá compilar os arquivos fonte e gerar o executável `main.exe`.
+
+3. Execute o programa:
+   ```bash
+   src/main.exe
+   ```
+
+#### Linux
+
+1. Abra o terminal e navegue até o diretório raiz do projeto.
+2. Para compilar o código, execute o seguinte comando:
+   ```bash
+   g++ -o src/main src/*.cpp
+   ```
+   Isso irá compilar os arquivos fonte e gerar o executável `main`.
+
+3. Execute o programa:
+   ```bash
+   ./src/main
    ```
 
 ---
