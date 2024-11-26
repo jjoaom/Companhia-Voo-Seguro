@@ -42,7 +42,6 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 2. Execute o script de setup:
    Para Windows, execute o arquivo `setup.bat`:
-
    ```bash
    setup.bat
    ```
@@ -61,16 +60,53 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
    ```
 
 2. Execute o script de setup:
-   Rode no terminal o comando de chmod para habilitar a permissão de execução do setup
-   Para Linux, execute o arquivo `setup.sh`:
+   Rode no terminal o comando de `chmod` para habilitar a permissão de execução do setup:
    ```bash
-     chmod +x setup.sh
-    ./setup.sh
+   chmod +x linux.sh
+   ./linux.sh
    ```
 
-2.Execute o programa:
-  ```bash
-     ./src/main
+   Agora, execute o arquivo `setup.sh`:
+   ```bash
+   chmod +x setup.sh
+   ./setup.sh
+   ```
+
+3. Execute o programa:
+   ```bash
+   ./src/main
+   ```
+
+### Compilação Manual (Opcional)
+
+Se preferir compilar manualmente, sem depender dos scripts, siga os passos abaixo:
+
+#### Windows
+
+1. Abra o terminal (Prompt de Comando ou PowerShell) e navegue até o diretório raiz do projeto.
+2. Para compilar o código, execute o seguinte comando (supondo que o MinGW esteja corretamente instalado):
+   ```bash
+   g++ -o src/main src/main.cpp
+   ```
+   Isso irá compilar os arquivos fonte e gerar o executável `main.exe`.
+
+3. Execute o programa:
+   ```bash
+   src/main.exe
+   ```
+
+#### Linux
+
+1. Abra o terminal e navegue até o diretório raiz do projeto.
+2. Para compilar o código, execute o seguinte comando:
+   ```bash
+   g++ -o src/main src/*.cpp
+   ```
+   Isso irá compilar os arquivos fonte e gerar o executável `main`.
+
+3. Execute o programa:
+   ```bash
+   ./src/main
    ```
 
 ---
