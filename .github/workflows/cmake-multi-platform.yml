@@ -1,4 +1,4 @@
-name: CMake on Ubuntu and Windows
+name: CMake on Multiple Platforms
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
       - name: Checkout code
@@ -32,11 +32,18 @@ jobs:
           sudo make
           sudo cp lib/*.a /usr/lib
 
+      - name: Install dependencies on macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install cmake
+          brew install googletest
+
       - name: Install dependencies on Windows
         if: matrix.os == 'windows-latest'
         run: |
           choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y
-          choco install googletest -y
+          choco install vcpkg -y
+          vcpkg install gtest
 
       - name: Configure CMake
         run: cmake -B build -S .
