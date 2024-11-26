@@ -5,8 +5,7 @@ git checkout windows
 git pull origin windows
 
 REM Compila o código
-cd src
-g++ -o main main.cpp
+g++ -o src/main src/main.cpp
 
 REM Finaliza com uma mensagem para o usuário
 echo "Compilação concluída!"
