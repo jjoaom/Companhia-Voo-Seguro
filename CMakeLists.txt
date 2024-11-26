@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.14)
 
 # Nome do projeto
-project(Companhia-Voo-Seguro)
+project(TP-Voo-Seguro)
 
 # Defina a versão do C++ que você quer usar
 set(CMAKE_CXX_STANDARD 17)
@@ -12,33 +12,32 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(STATUS "Compilando para o sistema: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "CMake versão: ${CMAKE_VERSION}")
 
-# Add this line to set the runtime library
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+# Configuração de runtime específica para MSVC
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
 
-# Defina configurações específicas com base no sistema operacional
+# Adicione o diretório de código-fonte
+add_executable(TP-Voo-Seguro src/main.cpp)
+
+# Configuração específica para GoogleTest
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(STATUS "Compilando para macOS/Linux")
-    # Verifica se o GoogleTest foi encontrado corretamente
     find_package(GTest REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
+    target_include_directories(TP-Voo-Seguro PUBLIC ${GTEST_INCLUDE_DIRS})
+    target_link_libraries(TP-Voo-Seguro GTest::gtest GTest::gtest_main pthread)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_link_libraries(main ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+    message(STATUS "Compilando para Windows")
+    find_package(GTest REQUIRED)
+    target_link_libraries(TP-Voo-Seguro ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
 else()
-    target_link_libraries(main GTest::gtest GTest::gtest_main pthread)
+    message(FATAL_ERROR "Sistema operacional não suportado!")
 endif()
 
-# Adiciona o arquivo de código-fonte principal
-add_executable(main main.cpp)
-target_link_libraries(main ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
-# Linka o GoogleTest
+# Ativar testes
 enable_testing()
 
-# Configura o link do GoogleTest
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    target_link_libraries(main ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
-else()
-    target_link_libraries(main GTest::gtest GTest::gtest_main)
+# Adicionar subdiretório de testes (se existir)
+if(EXISTS "${CMAKE_SOURCE_DIR}/test")
+    add_subdirectory(test)
 endif()
-
-# Adiciona o subdiretório de testes
-add_subdirectory(test)
