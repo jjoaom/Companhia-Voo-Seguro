@@ -149,7 +149,7 @@ void cadastrarVoo()
 
         verificaVooAtivo(novoVoo);
 
-        voosLoaded.push_back(novoVoo);
+        voosLoaded.emplace_back(novoVoo);
 
         salvarArqBinario(voosLoaded, "./data/voo.bin");
         recarregarVetoresGlobais();
@@ -195,7 +195,7 @@ void cadastrarAssentos()
             }
             novoAssento.setAssento(i);
             novoAssento.liberado();
-            assentos.push_back(novoAssento);
+            assentos.emplace_back(novoAssento);
         }
         salvarArqBinario(assentos, "./data/assento.bin");
         recarregarVetoresGlobais();
@@ -311,7 +311,7 @@ void reserva()
             }
 
             vector<Reserva> reservasLoaded = lerArqBinario<Reserva>("./data/reserva.bin");
-            reservasLoaded.push_back(novaReserva);
+            reservasLoaded.emplace_back(novaReserva);
 
             salvarArqBinario(reservasLoaded, "./data/reserva.bin");
             recarregarVetoresGlobais();
