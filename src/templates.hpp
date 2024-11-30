@@ -48,7 +48,7 @@ vector<T> lerArqBinario(const string &nomeArquivo)
     {
         T item;
         item.ler(arq);
-        vetor.push_back(item);
+        vetor.emplace_back(item);
     }
     arq.close();
     return vetor;
@@ -123,7 +123,7 @@ void cadastrarTemplate(const string &arqBinario)
         T novoItem;
         novoItem.cadastrar();
         verificarId(items, novoItem);
-        items.push_back(novoItem);
+        items.emplace_back(novoItem);
         salvarArqBinario(items, arqBinario);
         cout << "._____________________________" << endl;
         cout << "| Items registrados: " << endl;
