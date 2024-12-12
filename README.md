@@ -28,7 +28,7 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/jjoaom/TP-AEDS-Voo-Seguro.git
+   git clone https://github.com/jjoaom/Companhia-Voo-Seguro
    ```
 ## Como Executar o Projeto
 
@@ -38,40 +38,23 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 ### Instruções para Windows
 
-#### Opção 1: Usando MinGW
-
 1. Baixe e instale o MinGW pelo site oficial [MinGW-w64](https://www.mingw-w64.org/).
 
 2. Abra o terminal ou o Prompt de Comando no diretório do projeto.
 
 4. Compile o programa principal:
+    ```bash
+   cd src
+   ```
    ```bash
    g++ -o main main.cpp 
    ```
 
-5. Execute o programa:
-   ```bash
-   main.exe
-   ```
-#### Opção 2: Usando MSVC
-
-1. Instale o Microsoft Build Tools ou o Visual Studio, garantindo que o componente de desenvolvimento em C++ esteja selecionado.
-
-2. Abra o **Developer Command Prompt** do Visual Studio.
-
-3. Navegue até a pasta do projeto.
-
-4. Compile o programa principal:
-   ```bash
-   cl /EHsc main.cpp
-   ```
-
-5. Execute o programa:
+6. Execute o programa:
    ```bash
    main.exe
    ```
 
----
 
 ### Instruções para Linux
 
@@ -85,10 +68,13 @@ Este projeto é um sistema de gerenciamento para a companhia aérea fictícia **
 
 3. Compile o programa principal:
    ```bash
+   cd src
+   ```
+   ```bash
    g++ -o sistema main.cpp -std=c++17
    ```
 
-4. Execute o programa:
+5. Execute o programa:
    ```bash
    ./sistema
    ```
