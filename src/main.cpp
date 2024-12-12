@@ -725,7 +725,7 @@ void menu()
         default:
             break;
         }
-    } while (opcao != 9);
+    } while (opcao != 10);
 }
 
 
